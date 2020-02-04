@@ -8,7 +8,7 @@ namespace _2048
 {
     class Coordinates
     {
-      public int x, y;
+        public int x, y;
 
         public Coordinates(int x, int y)
         {
