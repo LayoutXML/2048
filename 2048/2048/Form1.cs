@@ -149,7 +149,7 @@ namespace _2048
 
         private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // restart game grid
+            RestartGame();
         }
 
         private void RulesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -422,6 +422,14 @@ namespace _2048
                     buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#A78510");
                     break;
             }
+        }
+
+        public void RestartGame()
+        {
+            // restart game grid
+            Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
+            GenerateNumber(2);
+            Redraw();
         }
     }
     
