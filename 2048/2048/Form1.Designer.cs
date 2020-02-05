@@ -92,7 +92,7 @@
             // scoreLabel
             // 
             this.scoreLabel.AutoSize = true;
-            this.scoreLabel.Location = new System.Drawing.Point(240, 171);
+            this.scoreLabel.Location = new System.Drawing.Point(720, 240);
             this.scoreLabel.Name = "scoreLabel";
             this.scoreLabel.Size = new System.Drawing.Size(46, 17);
             this.scoreLabel.TabIndex = 2;
