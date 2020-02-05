@@ -44,5 +44,27 @@ namespace _2048
         {
 
         }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void restartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // restart game grid
+        }
+
+        private void rulesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Initialise variables of the MessageBox
+            string message = "Combine two squares with the same value to make one square with a two times larger value.\n" +
+                "Make a square with value 2048 to win the game.";
+            string caption = "Rules";
+            MessageBoxButtons button = MessageBoxButtons.OK;
+            DialogResult result;
+            // Display the MessageBox
+            result = MessageBox.Show(message, caption, button);
+        }
     }
 }
