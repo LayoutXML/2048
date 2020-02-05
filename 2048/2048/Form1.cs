@@ -29,6 +29,7 @@ namespace _2048
                     Controls.Add(buttons[x, y]);
                 }
             }
+            redraw();
             GenerateNumber(2);
         }
 
@@ -162,7 +163,7 @@ namespace _2048
             // Display the MessageBox
             result = MessageBox.Show(message, caption, button);
         }
-
+        
         private bool MoveUp()
         {
             bool moved = false;
@@ -342,6 +343,85 @@ namespace _2048
                 }
             }
             return moved;
+        }
+        
+        public void redraw()
+        {
+            for (int x = 0; x < BOARD_WIDTH; x++)   //goes through the board and redraws the text
+            {
+                for (int y = 0; y < BOARD_WIDTH; y++)
+                {
+                    if(values[x,y] == 0)
+                    {
+                        buttons[x, y].Text = ""; 
+                    }
+                    else
+                    {
+                        buttons[x, y].Text = values[x, y].ToString(); //sets the button text to the correct value
+                    }
+                    changeColor(x, y); //changes the button text and background colors
+                }
+            }
+
+
+        }
+        
+        public void changeColor(int x, int y)
+        {
+            int number = values[x, y];
+
+            buttons[x, y].ForeColor = System.Drawing.ColorTranslator.FromHtml("#F9F6F2");
+            switch (number)
+            {
+                case 0: //square is empty
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEBE8");
+                    break;
+                case 2:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEE4DA");
+ 
+                    break;
+                case 4:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDE0C8");
+   
+                    break;
+                case 8:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F2B179");
+ 
+                    break;
+                case 16:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F59563");
+   
+                    break;
+                case 32:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F67C5F");
+                  
+                    break;
+                case 64:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F65E3B");
+                 
+                    break;
+                case 128:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDCF72");
+      
+                    break;
+                case 256:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDCC61");
+
+                    break;
+                case 512:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDC850");
+                    
+                    break;
+                case 1024:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDC53F");
+                    break;
+                case 2048:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDC22E");
+                    break;
+                default:
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#A78510");
+                    break;
+            }
         }
     }
     
