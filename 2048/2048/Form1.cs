@@ -29,8 +29,8 @@ namespace _2048
                     Controls.Add(buttons[x, y]);
                 }
             }
-            redraw();
             GenerateNumber(2);
+            Redraw();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -72,12 +72,12 @@ namespace _2048
             {
                 moved = MoveLeft();
             }
-            // UPDATE (REDRAW) BOARD HERE
+            Redraw();
             if (moved)
             {
                 GenerateNumber(1);
             }
-            // UPDATE (REDRAW) BOARD HERE
+            Redraw();
         }
 
         private void GenerateNumber(int amount)
@@ -345,7 +345,7 @@ namespace _2048
             return moved;
         }
         
-        public void redraw()
+        public void Redraw()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)   //goes through the board and redraws the text
             {
@@ -359,14 +359,14 @@ namespace _2048
                     {
                         buttons[x, y].Text = values[x, y].ToString(); //sets the button text to the correct value
                     }
-                    changeColor(x, y); //changes the button text and background colors
+                    ChangeColor(x, y); //changes the button text and background colors
                 }
             }
 
 
         }
         
-        public void changeColor(int x, int y)
+        public void ChangeColor(int x, int y)
         {
             int number = values[x, y];
 
