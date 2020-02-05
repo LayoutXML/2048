@@ -150,6 +150,9 @@ namespace _2048
         private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // restart game grid
+            Array.Clear(values, 0, BOARD_WIDTH*BOARD_WIDTH);
+            GenerateNumber(2);
+            Redraw();
         }
 
         private void RulesToolStripMenuItem_Click(object sender, EventArgs e)
