@@ -8,18 +8,21 @@ namespace _2048
     public partial class Form1 : Form
     {
         public const int BOARD_WIDTH = 4;
-        private const int TOP_MARGIN = 240; //multiple of 8 for consistency
-        private const int BOTTOM_MARGIN = 128;
-        private const int SIDE_MARGIN = 240;
+        private const int TOP_MARGIN = 80; //multiple of 8 for consistency
+        private const int BOTTOM_MARGIN = 80;
+        private const int SIDE_MARGIN = 80;
         private const int TILE_WIDTH = 80;
-        private const int TILE_MARGIN = 16;
+        private const int TILE_MARGIN = 0;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private int score = 0;
         private Label scoreLabel;
         public Form1()
         {
-            InitializeComponent();
+           InitializeComponent();
+           this.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef"); //changes form background
+            menuStrip2.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef");
+            menuStrip1.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef");
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
@@ -28,6 +31,10 @@ namespace _2048
                     buttons[x, y].SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * x, TOP_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * y, TILE_WIDTH, TILE_WIDTH);
                     buttons[x, y].Click += new EventHandler(this.ButtonEvent_Click);
                     buttons[x, y].Name = x.ToString() + " " + y.ToString();
+                    buttons[x, y].Font = new Font("Courier New", 24, FontStyle.Bold); //font
+                    buttons[x, y].FlatStyle = FlatStyle.Flat;
+                    buttons[x, y].FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#bbada0");
+                    buttons[x, y].FlatAppearance.BorderSize = 4;
                     Controls.Add(buttons[x, y]);
                 }
             }
@@ -267,7 +274,6 @@ namespace _2048
 
         private bool MoveDown()
         {
-
             bool moved = false;
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
@@ -382,11 +388,10 @@ namespace _2048
         public void ChangeColor(int x, int y)
         {
             int number = values[x, y];
-
             switch (number)
             {
                 case 0: //square is empty
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEBE8");
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#e6e2df");
                     break;
                 case 2:
                     buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEE4DA");
@@ -440,9 +445,11 @@ namespace _2048
         {
             scoreLabel = new Label();
             scoreLabel.AutoSize = true;
-            int xScoreLabel = SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1);
-            int yScoreLabel = TOP_MARGIN - TILE_MARGIN * 2;
+            int tile_margin = 16;
+            int xScoreLabel = SIDE_MARGIN - tile_margin + (TILE_WIDTH - tile_margin) * (BOARD_WIDTH - 1);
+            int yScoreLabel = TOP_MARGIN - tile_margin * 2;
             scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
+            scoreLabel.Font = new Font("Courier New", 16, FontStyle.Bold); //font
             Controls.Add(scoreLabel);
         }
         
