@@ -154,6 +154,7 @@ namespace _2048
         {
             // restart game grid
             score = 0;
+            RestartGame();
         }
 
         private void RulesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -440,6 +441,14 @@ namespace _2048
             int yScoreLabel = TOP_MARGIN - TILE_MARGIN * 2;
             scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
             Controls.Add(scoreLabel);
+        }
+        
+        public void RestartGame()
+        {
+            // restart game grid
+            Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
+            GenerateNumber(2);
+            Redraw();
         }
     }
     
