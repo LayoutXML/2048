@@ -7,22 +7,34 @@ namespace _2048
 {
     public partial class Form1 : Form
     {
+        // constants
         public const int BOARD_WIDTH = 4;
         private const int TOP_MARGIN = 80; //multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
         private const int TILE_WIDTH = 80;
         private const int TILE_MARGIN = 0;
+        private readonly string[] COLORS = new[] { "#CDC1B5", "#EEE4DB", "#F1E2CE", "#F0B57D", "#F19F64", "#F77E73", "#FD5644", "#F1D275", "#F1D275", "#E6C847", "#EDBE4A", "#EFBE45" };
+        private const string DEFAULT_COLOR = "#3D3A31";
+        private const string DEFAULT_TEXT_COLOR = "#000000";
+        private const string INVERSE_TEXT_COLOR = "#ffffff";
+        private const string BACKGROUND_COLOR = "#faf8ef";
+        private const string FONT = "Courier New";
+        private const int FONT_SIZE_DEFAULT = 24;
+        private const int FONT_SIZE_SMALL = 18;
+        private const int FONT_SIZE_EXTRA_SMALL = 12;
+
+
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private int score = 0;
         private Label scoreLabel;
         public Form1()
         {
-           InitializeComponent();
-           this.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef"); //changes form background
-            menuStrip2.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef");
-            menuStrip1.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef");
+            InitializeComponent();
+            this.BackColor = System.Drawing.ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
+            menuStrip2.BackColor = System.Drawing.ColorTranslator.FromHtml(BACKGROUND_COLOR);
+            menuStrip1.BackColor = System.Drawing.ColorTranslator.FromHtml(BACKGROUND_COLOR);
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
@@ -31,14 +43,13 @@ namespace _2048
                     buttons[x, y].SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * x, TOP_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * y, TILE_WIDTH, TILE_WIDTH);
                     buttons[x, y].Click += new EventHandler(this.ButtonEvent_Click);
                     buttons[x, y].Name = x.ToString() + " " + y.ToString();
-                    buttons[x, y].Font = new Font("Courier New", 24, FontStyle.Bold); //font
                     buttons[x, y].FlatStyle = FlatStyle.Flat;
                     buttons[x, y].FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#bbada0");
                     buttons[x, y].FlatAppearance.BorderSize = 4;
                     Controls.Add(buttons[x, y]);
                 }
             }
-            addScoreLabel();
+            AddScoreLabel();
             GenerateNumber(2);
             Redraw();
         }
@@ -103,18 +114,14 @@ namespace _2048
                     return;
                 }
                 int number = random.Next(0, 1) == 0 ? 2 : 4; // generate a random number and decide if it's a 2 or a 4
-
-                buttons[coordinates.x, coordinates.y].Text = number.ToString(); // write the new number
                 values[coordinates.x, coordinates.y] = number;
             }
             else // if we need 2 numbers
             {
-                buttons[coordinates.x, coordinates.y].Text = "4"; // write the new number
                 values[coordinates.x, coordinates.y] = 4;
                 coordinates = CheckOpenSpace();
-                buttons[coordinates.x, coordinates.y].Text = "2"; // write the new number
                 values[coordinates.x, coordinates.y] = 2;
-
+                coordinates = CheckOpenSpace();
             }
         }
         
@@ -387,61 +394,28 @@ namespace _2048
         
         public void ChangeColor(int x, int y)
         {
-            int number = values[x, y];
-            switch (number)
+            int index = values[x, y] == 0 ? 0 : (int)Math.Log(values[x, y], 2);
+            string backColor = index >= COLORS.Length ? DEFAULT_COLOR : COLORS[index];
+            string textColor = values[x, y] > 4 ? INVERSE_TEXT_COLOR : DEFAULT_TEXT_COLOR;
+            buttons[x, y].BackColor = ColorTranslator.FromHtml(backColor);
+            buttons[x, y].ForeColor = ColorTranslator.FromHtml(textColor);
+            int fontSize;
+            if (values[x, y] > 999)
             {
-                case 0: //square is empty
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#e6e2df");
-                    break;
-                case 2:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEE4DA");
- 
-                    break;
-                case 4:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDE0C8");
-   
-                    break;
-                case 8:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F2B179");
- 
-                    break;
-                case 16:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F59563");
-   
-                    break;
-                case 32:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F67C5F");
-                  
-                    break;
-                case 64:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#F65E3B");
-                 
-                    break;
-                case 128:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDCF72");
-      
-                    break;
-                case 256:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDCC61");
-
-                    break;
-                case 512:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDC850");
-                    
-                    break;
-                case 1024:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDC53F");
-                    break;
-                case 2048:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EDC22E");
-                    break;
-                default:
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#A78510");
-                    break;
+                fontSize = FONT_SIZE_EXTRA_SMALL;
             }
+            else if (values[x, y] > 99)
+            {
+                fontSize = FONT_SIZE_SMALL;
+            }
+            else
+            {
+                fontSize = FONT_SIZE_DEFAULT;
+            }
+            buttons[x, y].Font = new Font(FONT, fontSize, FontStyle.Bold); //font
         }
 
-        private void addScoreLabel()
+        private void AddScoreLabel()
         {
             scoreLabel = new Label();
             scoreLabel.AutoSize = true;
@@ -459,6 +433,34 @@ namespace _2048
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
             GenerateNumber(2);
             Redraw();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            bool moved = false;
+            if (keyData == Keys.Up)
+            {
+                moved = MoveUp();
+            }
+            else if (keyData == Keys.Right)
+            {
+                moved = MoveRight();
+            }
+            else if (keyData == Keys.Down)
+            {
+                moved = MoveDown();
+            }
+            else if (keyData == Keys.Left)
+            {
+                moved = MoveLeft();
+            }
+            Redraw();
+            if (moved)
+            {
+                GenerateNumber(1);
+            }
+            Redraw();
+            return true;
         }
     }
     
