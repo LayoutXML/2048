@@ -32,9 +32,9 @@ namespace _2048
         public Form1()
         {
             InitializeComponent();
-            this.BackColor = System.Drawing.ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
-            menuStrip2.BackColor = System.Drawing.ColorTranslator.FromHtml(BACKGROUND_COLOR);
-            menuStrip1.BackColor = System.Drawing.ColorTranslator.FromHtml(BACKGROUND_COLOR);
+            this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
+            menuStrip2.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
+            menuStrip1.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
@@ -44,7 +44,7 @@ namespace _2048
                     buttons[x, y].Click += new EventHandler(this.ButtonEvent_Click);
                     buttons[x, y].Name = x.ToString() + " " + y.ToString();
                     buttons[x, y].FlatStyle = FlatStyle.Flat;
-                    buttons[x, y].FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#bbada0");
+                    buttons[x, y].FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
                     buttons[x, y].FlatAppearance.BorderSize = 4;
                     Controls.Add(buttons[x, y]);
                 }
@@ -435,24 +435,31 @@ namespace _2048
             Redraw();
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        protected override bool ProcessCmdKey(ref Message message, Keys key)
         {
             bool moved = false;
-            if (keyData == Keys.Up)
+            bool processed = false;
+            switch (key)
             {
-                moved = MoveUp();
-            }
-            else if (keyData == Keys.Right)
-            {
-                moved = MoveRight();
-            }
-            else if (keyData == Keys.Down)
-            {
-                moved = MoveDown();
-            }
-            else if (keyData == Keys.Left)
-            {
-                moved = MoveLeft();
+                case Keys.Up:
+                    moved = MoveUp();
+                    processed = true;
+                    break;
+                case Keys.Right:
+                    moved = MoveRight();
+                    processed = true;
+                    break;
+                case Keys.Down:
+                    moved = MoveDown();
+                    processed = true;
+                    break;
+                case Keys.Left:
+                    moved = MoveLeft();
+                    processed = true;
+                    break;
+                default:
+                    processed = false;
+                    break;
             }
             Redraw();
             if (moved)
@@ -460,7 +467,12 @@ namespace _2048
                 GenerateNumber(1);
             }
             Redraw();
-            return true;
+
+            if (processed)
+            {
+                return true;
+            }
+            return base.ProcessCmdKey(ref message, key);
         }
     }
     
