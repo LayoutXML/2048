@@ -15,6 +15,8 @@ namespace _2048
         private const int TILE_MARGIN = 16;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
+        private int score = 0;
+        private Label scoreLabel;
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +31,7 @@ namespace _2048
                     Controls.Add(buttons[x, y]);
                 }
             }
+            addScoreLabel();
             GenerateNumber(2);
             Redraw();
         }
@@ -149,6 +152,8 @@ namespace _2048
 
         private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // restart game grid
+            score = 0;
             RestartGame();
         }
 
@@ -176,6 +181,7 @@ namespace _2048
                     if (value != 0 && values[x, y] == value)
                     {
                         newColumn.Add(value * 2);
+                        score += value * 2;
                         value = 0;
                     }
                     else
@@ -221,6 +227,7 @@ namespace _2048
                     if (value != 0 && values[x, y] == value)
                     {
                         newColumn.Add(value * 2);
+                        score += value * 2;
                         value = 0;
                     }
                     else
@@ -267,6 +274,7 @@ namespace _2048
                     if (value != 0 && values[x, y] == value)
                     {
                         newColumn.Add(value * 2);
+                        score += value * 2;
                         value = 0;
                     }
                     else
@@ -312,6 +320,7 @@ namespace _2048
                     if (value != 0 && values[x, y] == value)
                     {
                         newColumn.Add(value * 2);
+                        score += value * 2;
                         value = 0;
                     }
                     else
@@ -362,7 +371,7 @@ namespace _2048
                     ChangeColor(x, y); //changes the button text and background colors
                 }
             }
-
+            scoreLabel.Text = "Score: " + Convert.ToString(score); //updates scoreLabel text
 
         }
         
@@ -424,6 +433,16 @@ namespace _2048
             }
         }
 
+        private void addScoreLabel()
+        {
+            scoreLabel = new Label();
+            scoreLabel.AutoSize = true;
+            int xScoreLabel = SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1);
+            int yScoreLabel = TOP_MARGIN - TILE_MARGIN * 2;
+            scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
+            Controls.Add(scoreLabel);
+        }
+        
         public void RestartGame()
         {
             // restart game grid
