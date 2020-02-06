@@ -16,6 +16,7 @@ namespace _2048
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private int score = 0;
+        private Label scoreLabel;
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +31,7 @@ namespace _2048
                     Controls.Add(buttons[x, y]);
                 }
             }
+            addScoreLabel();
             GenerateNumber(2);
             Redraw();
         }
@@ -428,6 +430,16 @@ namespace _2048
                     buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#A78510");
                     break;
             }
+        }
+
+        private void addScoreLabel()
+        {
+            scoreLabel = new Label();
+            scoreLabel.AutoSize = true;
+            int xScoreLabel = SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1);
+            int yScoreLabel = TOP_MARGIN - TILE_MARGIN * 2;
+            scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
+            Controls.Add(scoreLabel);
         }
     }
     
