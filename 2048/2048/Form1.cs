@@ -12,14 +12,19 @@ namespace _2048
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
         private const int TILE_WIDTH = 80;
-        private const int TILE_MARGIN = 1;
+        private const int TILE_MARGIN = 0;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private int score = 0;
         private Label scoreLabel;
         public Form1()
         {
+            
+
             InitializeComponent();
+           this.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef"); //changes form background
+            menuStrip2.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef");
+            menuStrip1.BackColor = System.Drawing.ColorTranslator.FromHtml("#faf8ef");
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
@@ -28,7 +33,10 @@ namespace _2048
                     buttons[x, y].SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * x, TOP_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * y, TILE_WIDTH, TILE_WIDTH);
                     buttons[x, y].Click += new EventHandler(this.ButtonEvent_Click);
                     buttons[x, y].Name = x.ToString() + " " + y.ToString();
-                    buttons[x, y].Font = new Font("Arial", 24, FontStyle.Bold);
+                    buttons[x, y].Font = new Font("Courier New", 24, FontStyle.Bold); //font
+                    buttons[x, y].FlatStyle = FlatStyle.Flat;
+                    buttons[x, y].FlatAppearance.BorderColor = System.Drawing.ColorTranslator.FromHtml("#bbada0");
+                    buttons[x, y].FlatAppearance.BorderSize = 4;
                     Controls.Add(buttons[x, y]);
                 }
             }
@@ -436,9 +444,11 @@ namespace _2048
         {
             scoreLabel = new Label();
             scoreLabel.AutoSize = true;
-            int xScoreLabel = SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1);
-            int yScoreLabel = TOP_MARGIN - TILE_MARGIN * 2;
+            int tile_margin = 16;
+            int xScoreLabel = SIDE_MARGIN - tile_margin + (TILE_WIDTH - tile_margin) * (BOARD_WIDTH - 1);
+            int yScoreLabel = TOP_MARGIN - tile_margin * 2;
             scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
+            scoreLabel.Font = new Font("Courier New", 16, FontStyle.Bold); //font
             Controls.Add(scoreLabel);
         }
         
