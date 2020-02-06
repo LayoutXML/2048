@@ -161,7 +161,11 @@ namespace _2048
         {
             // Initialise variables of the MessageBox
             string message = "Combine two squares with the same value to make one square with a two times larger value.\n" +
-                "Make a square with value 2048 to win the game.";
+                "Make a square with value 2048 to win the game.\n\n" +
+                "Press top row's middle buttons to move up.\n" +
+                "Press bottom row's middle buttons to move down.\n" +
+                "Press left collumn's middle buttons to move left.\n" +
+                "Press right collumn's middle buttons to move right.\n";
             string caption = "Rules";
             MessageBoxButtons button = MessageBoxButtons.OK;
             DialogResult result;
@@ -379,7 +383,6 @@ namespace _2048
         {
             int number = values[x, y];
 
-            buttons[x, y].ForeColor = System.Drawing.ColorTranslator.FromHtml("#F9F6F2");
             switch (number)
             {
                 case 0: //square is empty
