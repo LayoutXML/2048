@@ -8,11 +8,11 @@ namespace _2048
     public partial class Form1 : Form
     {
         public const int BOARD_WIDTH = 4;
-        private const int TOP_MARGIN = 240; //multiple of 8 for consistency
-        private const int BOTTOM_MARGIN = 128;
-        private const int SIDE_MARGIN = 240;
+        private const int TOP_MARGIN = 80; //multiple of 8 for consistency
+        private const int BOTTOM_MARGIN = 80;
+        private const int SIDE_MARGIN = 80;
         private const int TILE_WIDTH = 80;
-        private const int TILE_MARGIN = 16;
+        private const int TILE_MARGIN = 1;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private int score = 0;
@@ -28,6 +28,7 @@ namespace _2048
                     buttons[x, y].SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * x, TOP_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * y, TILE_WIDTH, TILE_WIDTH);
                     buttons[x, y].Click += new EventHandler(this.ButtonEvent_Click);
                     buttons[x, y].Name = x.ToString() + " " + y.ToString();
+                    buttons[x, y].Font = new Font("Arial", 24, FontStyle.Bold);
                     Controls.Add(buttons[x, y]);
                 }
             }
@@ -378,12 +379,10 @@ namespace _2048
         public void ChangeColor(int x, int y)
         {
             int number = values[x, y];
-
-            buttons[x, y].ForeColor = System.Drawing.ColorTranslator.FromHtml("#F9F6F2");
             switch (number)
             {
                 case 0: //square is empty
-                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEEBE8");
+                    buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#e6e2df");
                     break;
                 case 2:
                     buttons[x, y].BackColor = System.Drawing.ColorTranslator.FromHtml("#EEE4DA");
