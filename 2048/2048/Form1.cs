@@ -23,6 +23,7 @@ namespace _2048
         private const int FONT_SIZE_DEFAULT = 24;
         private const int FONT_SIZE_SMALL = 18;
         private const int FONT_SIZE_EXTRA_SMALL = 12;
+        private const bool IS_HARD_MODE = true;
 
 
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
@@ -50,13 +51,16 @@ namespace _2048
                 }
             }
             AddScoreLabel();
-            GenerateNumber(2);
+            GenerateNumber(2, -1);
             Redraw();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             Program.mainForm.Size = new Size(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * BOARD_WIDTH + SIDE_MARGIN, TOP_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * BOARD_WIDTH + BOTTOM_MARGIN);
+            Program.mainForm.FormBorderStyle = FormBorderStyle.FixedSingle;
+            Program.mainForm.MaximizeBox = false;
+            Program.mainForm.MinimizeBox = false;
         }
 
         private void ButtonEvent_Click(object sender, EventArgs e)
@@ -77,37 +81,42 @@ namespace _2048
             }
 
             bool moved = false;
+            int direction = -1;
             if (clickedY == 0 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
             {
                 moved = MoveUp();
+                direction = 0;
             }
             else if (clickedX == BOARD_WIDTH - 1 && (clickedY != 0 && clickedY != BOARD_WIDTH - 1))
             {
                 moved = MoveRight();
+                direction = 1;
             }
             else if (clickedY == BOARD_WIDTH - 1 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
             {
                 moved = MoveDown();
+                direction = 2;
             }
             else if (clickedX == 0 && (clickedY != 0 && clickedY != BOARD_WIDTH - 1))
             {
                 moved = MoveLeft();
+                direction = 3;
             }
             Redraw();
             if (moved)
             {
-                GenerateNumber(1);
+                GenerateNumber(1, direction);
             }
             Redraw();
         }
 
-        private void GenerateNumber(int amount)
+        private void GenerateNumber(int amount, int direction)
         {
             Random random = new Random(); // Generates new number
-            Coordinates coordinates = CheckOpenSpace(); // gets the coordinates of a space
             if (amount == 1) // If we need to generate only 1 new number
             {
-                if(coordinates == null) // if coordinates are null that means there are no more open spaces left
+                Coordinates coordinates = CheckOpenSpace(direction); // gets the coordinates of a space
+                if (coordinates == null) // if coordinates are null that means there are no more open spaces left
                 {
                     //GAME OVER (NO MORE SPACE LEFT)
                     Console.WriteLine("ENDDD");
@@ -118,14 +127,14 @@ namespace _2048
             }
             else // if we need 2 numbers
             {
+                Coordinates coordinates = CheckOpenSpace(direction); // gets the coordinates of a space
                 values[coordinates.x, coordinates.y] = 4;
-                coordinates = CheckOpenSpace();
+                coordinates = CheckOpenSpace(direction);
                 values[coordinates.x, coordinates.y] = 2;
-                coordinates = CheckOpenSpace();
             }
         }
         
-        private Coordinates CheckOpenSpace()
+        private Coordinates CheckOpenSpace(int direction)
         {
             Coordinates OpenSpace = null;
             int count = 0; // the count of free spaces
@@ -145,15 +154,136 @@ namespace _2048
             }
             if (count > 1) // if there are more then 1 open space available
             {
-                Random random = new Random();
-                int x, y;
-                do 
+                if (IS_HARD_MODE && direction != -1)
                 {
-                    x = random.Next(0, BOARD_WIDTH);
-                    y = random.Next(0, BOARD_WIDTH);
-                } while (values[x, y] != 0); //repeat the loop until an open space is found
-                OpenSpace = new Coordinates(x, y);
-                               
+                    int[] maxValues = new int[BOARD_WIDTH];
+                    int[] xCoordinates = new int[BOARD_WIDTH];
+                    int[] yCoordinates = new int[BOARD_WIDTH];
+                    int finalX = -1;
+                    int finalY = -1;
+                    if (direction == 0)
+                    {
+                        for (int x = 0; x < BOARD_WIDTH; x++)
+                        {
+                            int firstValue = 0;
+                            int index = BOARD_WIDTH - 1;
+                            while (firstValue == 0 && index >= 0)
+                            {
+                                firstValue = values[x, index];
+                                index--;
+                            }
+                            maxValues[x] = index + 2 < BOARD_WIDTH ? firstValue : 0;
+                            yCoordinates[x] = index + 2;
+                        }
+                        int maxValue = 0;
+                        for (int x = 0; x < BOARD_WIDTH; x++)
+                        {
+                            if (maxValues[x] > maxValue)
+                            {
+                                maxValue = maxValues[x];
+                                finalX = x;
+                                finalY = yCoordinates[x];
+                            }
+                        }
+                    }
+                    else if (direction == 1)
+                    {
+                        for (int y = 0; y < BOARD_WIDTH; y++)
+                        {
+                            int firstValue = 0;
+                            int index = 0;
+                            while (firstValue == 0 && index < BOARD_WIDTH)
+                            {
+                                firstValue = values[index, y];
+                                index++;
+                            }
+                            maxValues[y] = index - 2 >= 0 ? firstValue : 0;
+                            xCoordinates[y] = index - 2;
+                        }
+                        int maxValue = 0;
+                        for (int y = 0; y < BOARD_WIDTH; y++)
+                        {
+                            if (maxValues[y] > maxValue)
+                            {
+                                maxValue = maxValues[y];
+                                finalY = y;
+                                finalX = xCoordinates[y];
+                            }
+                        }
+                    }
+                    else if (direction == 2)
+                    {
+                        for (int x = 0; x < BOARD_WIDTH; x++)
+                        {
+                            int firstValue = 0;
+                            int index = 0;
+                            while (firstValue == 0 && index < BOARD_WIDTH)
+                            {
+                                firstValue = values[x, index];
+                                index++;
+                            }
+                            maxValues[x] = index - 2 >= 0 ? firstValue : 0;
+                            yCoordinates[x] = index - 2;
+                        }
+                        int maxValue = 0;
+                        for (int x = 0; x < BOARD_WIDTH; x++)
+                        {
+                            if (maxValues[x] > maxValue)
+                            {
+                                maxValue = maxValues[x];
+                                finalX = x;
+                                finalY = yCoordinates[x];
+                            }
+                        }
+                    }
+                    else if (direction == 3)
+                    {
+                        for (int y = 0; y < BOARD_WIDTH; y++)
+                        {
+                            int firstValue = 0;
+                            int index = BOARD_WIDTH - 1;
+                            while (firstValue == 0 && index >= 0)
+                            {
+                                firstValue = values[index, y];
+                                index--;
+                            }
+                            maxValues[y] = index + 2 < BOARD_WIDTH ? firstValue : 0;
+                            xCoordinates[y] = index + 2;
+                        }
+                        int maxValue = 0;
+                        for (int y = 0; y < BOARD_WIDTH; y++)
+                        {
+                            if (maxValues[y] > maxValue)
+                            {
+                                maxValue = maxValues[y];
+                                finalY = y;
+                                finalX = xCoordinates[y];
+                            }
+                        }
+                    }
+
+
+                    if (finalX == -1 || finalY == -1 || finalX >= BOARD_WIDTH || finalY >= BOARD_WIDTH)
+                    {
+                        direction = -1;
+                    }
+                    else
+                    {
+                        OpenSpace = new Coordinates(finalX, finalY);
+                    }
+                }
+                if (!IS_HARD_MODE || direction == -1)
+                {
+                    Random random = new Random();
+                    int x, y;
+                    do
+                    {
+                        x = random.Next(0, BOARD_WIDTH);
+                        y = random.Next(0, BOARD_WIDTH);
+                    } while (values[x, y] != 0); //repeat the loop until an open space is found
+                    OpenSpace = new Coordinates(x, y);
+                }
+
             }
            
             return OpenSpace;
@@ -431,7 +561,7 @@ namespace _2048
         {
             // restart game grid
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
-            GenerateNumber(2);
+            GenerateNumber(2, -1);
             Redraw();
         }
 
@@ -439,23 +569,28 @@ namespace _2048
         {
             bool moved = false;
             bool processed = false;
+            int direction = -1;
             switch (key)
             {
                 case Keys.Up:
                     moved = MoveUp();
                     processed = true;
+                    direction = 0;
                     break;
                 case Keys.Right:
                     moved = MoveRight();
                     processed = true;
+                    direction = 1;
                     break;
                 case Keys.Down:
                     moved = MoveDown();
                     processed = true;
+                    direction = 2;
                     break;
                 case Keys.Left:
                     moved = MoveLeft();
                     processed = true;
+                    direction = 3;
                     break;
                 default:
                     processed = false;
@@ -464,7 +599,7 @@ namespace _2048
             Redraw();
             if (moved)
             {
-                GenerateNumber(1);
+                GenerateNumber(1, direction);
             }
             Redraw();
 
