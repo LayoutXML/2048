@@ -8,8 +8,8 @@ namespace _2048
     public partial class Form1 : Form
     {
         // constants
-        public const int BOARD_WIDTH = 4;
-        private const int TOP_MARGIN = 80; //multiple of 8 for consistency
+        public const int BOARD_WIDTH = 50;
+        private const int TOP_MARGIN = 136; //multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
         private const int TILE_WIDTH = 80;
@@ -28,8 +28,10 @@ namespace _2048
 
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
+        private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH];
         private int score = 0;
         private Label scoreLabel;
+        private Button undoButton;
         public Form1()
         {
             InitializeComponent();
@@ -51,7 +53,9 @@ namespace _2048
                 }
             }
             AddScoreLabel();
+            AddUndoButton();
             GenerateNumber(2, -1);
+            CopyValues();
             Redraw();
         }
 
@@ -61,6 +65,13 @@ namespace _2048
             Program.mainForm.FormBorderStyle = FormBorderStyle.FixedSingle;
             Program.mainForm.MaximizeBox = false;
             Program.mainForm.MinimizeBox = false;
+        }
+
+        private void UndoButton_Click(object sender, EventArgs e)
+        {
+            Undo();
+            CopyValues();
+            Redraw();
         }
 
         private void ButtonEvent_Click(object sender, EventArgs e)
@@ -80,6 +91,7 @@ namespace _2048
                 }
             }
 
+            CopyValues();
             bool moved = false;
             int direction = -1;
             if (clickedY == 0 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
@@ -106,8 +118,8 @@ namespace _2048
             if (moved)
             {
                 GenerateNumber(1, direction);
+                Redraw();
             }
-            Redraw();
         }
 
         private void GenerateNumber(int amount, int direction)
@@ -133,7 +145,7 @@ namespace _2048
                 values[coordinates.x, coordinates.y] = 2;
             }
         }
-        
+
         private Coordinates CheckOpenSpace(int direction)
         {
             Coordinates OpenSpace = null;
@@ -142,14 +154,14 @@ namespace _2048
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
                 {
-                   if (values[x, y] == 0) // if it's a free space
+                    if (values[x, y] == 0) // if it's a free space
                     {
-                        if(count == 0) // if it's the 1st free space then get it's coordinates
+                        if (count == 0) // if it's the 1st free space then get it's coordinates
                         {
                             OpenSpace = new Coordinates(x, y);
                         }
                         count++;
-                    } 
+                    }
                 }
             }
             if (count > 1) // if there are more then 1 open space available
@@ -285,7 +297,7 @@ namespace _2048
                 }
 
             }
-           
+
             return OpenSpace;
         }
 
@@ -316,7 +328,7 @@ namespace _2048
             // Display the MessageBox
             result = MessageBox.Show(message, caption, button);
         }
-        
+
         private bool MoveUp()
         {
             bool moved = false;
@@ -500,16 +512,16 @@ namespace _2048
             }
             return moved;
         }
-        
+
         public void Redraw()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)   //goes through the board and redraws the text
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
                 {
-                    if(values[x,y] == 0)
+                    if (values[x, y] == 0)
                     {
-                        buttons[x, y].Text = ""; 
+                        buttons[x, y].Text = "";
                     }
                     else
                     {
@@ -521,7 +533,7 @@ namespace _2048
             scoreLabel.Text = "Score: " + Convert.ToString(score); //updates scoreLabel text
 
         }
-        
+
         public void ChangeColor(int x, int y)
         {
             int index = values[x, y] == 0 ? 0 : (int)Math.Log(values[x, y], 2);
@@ -553,10 +565,25 @@ namespace _2048
             int xScoreLabel = SIDE_MARGIN - tile_margin + (TILE_WIDTH - tile_margin) * (BOARD_WIDTH - 1);
             int yScoreLabel = TOP_MARGIN - tile_margin * 2;
             scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
-            scoreLabel.Font = new Font("Courier New", 16, FontStyle.Bold); //font
+            scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); //font
             Controls.Add(scoreLabel);
         }
-        
+
+        private void AddUndoButton()
+        {
+            undoButton = new Button();
+            undoButton.SetBounds(SIDE_MARGIN - TILE_MARGIN, TOP_MARGIN - TILE_MARGIN - TILE_WIDTH, TILE_WIDTH, TILE_WIDTH / 2);
+            undoButton.Click += new EventHandler(this.UndoButton_Click);
+            undoButton.FlatStyle = FlatStyle.Flat;
+            undoButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            undoButton.FlatAppearance.BorderSize = 4;
+            undoButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            undoButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            undoButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
+            undoButton.Text = "UNDO";
+            Controls.Add(undoButton);
+        }
+
         public void RestartGame()
         {
             // restart game grid
@@ -573,21 +600,25 @@ namespace _2048
             switch (key)
             {
                 case Keys.Up:
+                    CopyValues();
                     moved = MoveUp();
                     processed = true;
                     direction = 0;
                     break;
                 case Keys.Right:
+                    CopyValues();
                     moved = MoveRight();
                     processed = true;
                     direction = 1;
                     break;
                 case Keys.Down:
+                    CopyValues();
                     moved = MoveDown();
                     processed = true;
                     direction = 2;
                     break;
                 case Keys.Left:
+                    CopyValues();
                     moved = MoveLeft();
                     processed = true;
                     direction = 3;
@@ -600,14 +631,36 @@ namespace _2048
             if (moved)
             {
                 GenerateNumber(1, direction);
+                Redraw();
             }
-            Redraw();
 
             if (processed)
             {
                 return true;
             }
             return base.ProcessCmdKey(ref message, key);
+        }
+
+        public void CopyValues()
+        {
+            for (int x = 0; x < BOARD_WIDTH; x++)
+            {
+                for (int y = 0; y < BOARD_WIDTH; y++)
+                {
+                    oldValues[x, y] = values[x, y];
+                }
+            }
+        }
+
+        public void Undo()
+        {
+            for (int x = 0; x < BOARD_WIDTH; x++)
+            {
+                for (int y = 0; y < BOARD_WIDTH; y++)
+                {
+                    values[x, y] = oldValues[x, y];
+                }
+            }
         }
     }
     
