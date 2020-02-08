@@ -664,7 +664,6 @@ namespace _2048
                     values[x, y] = oldValues[x, y];
                 }
             }
-            Redraw();
         }
     }
     
