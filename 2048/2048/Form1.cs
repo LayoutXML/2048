@@ -8,7 +8,7 @@ namespace _2048
     public partial class Form1 : Form
     {
         // constants
-        public const int BOARD_WIDTH = 50;
+        public const int BOARD_WIDTH = 4;
         private const int TOP_MARGIN = 136; //multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
@@ -23,12 +23,13 @@ namespace _2048
         private const int FONT_SIZE_DEFAULT = 24;
         private const int FONT_SIZE_SMALL = 18;
         private const int FONT_SIZE_EXTRA_SMALL = 12;
-        private const bool IS_HARD_MODE = true;
+        private const bool IS_HARD_MODE = false;
 
 
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH];
+        private int[] scoreTable = { 0, 0, 0, 0, 0 };   // initialise array with 0 values
         private int score = 0;
         private Label scoreLabel;
         private Button undoButton;
@@ -57,6 +58,7 @@ namespace _2048
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
+            saveToFile();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -661,6 +663,69 @@ namespace _2048
                     values[x, y] = oldValues[x, y];
                 }
             }
+        }
+
+        public void saveToFile()
+        {
+            if (inserScore()) //if the scoreboard changed
+            {
+                using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter("score.txt"))
+                {
+                    foreach (int number in scoreTable)
+                    {
+
+
+                        file.WriteLine(number.ToString(),true);
+                    }
+                }
+            }
+
+
+        }
+   
+        
+        public bool inserScore()
+        {
+            bool inserted = false;
+            
+            int num1;   // used for swaping values
+            int num2;
+
+            int tableLenght = scoreTable.Length;
+           
+            if (score < scoreTable[tableLenght-1]) //score is lower then the top 5 so it will not be inserted to the table
+            {
+                   inserted = false;
+            }
+            else
+                {
+                    int x = 0;
+                    while(!inserted)
+                    { 
+                        
+                        if(score > scoreTable[x])
+                        {
+                            num1 = scoreTable[x];
+                            scoreTable[x] = score;
+                            for(int i = x+1; i < tableLenght;i++)
+                            {
+                                num2 = scoreTable[i];
+                                scoreTable[i] = num1;
+                                num1 = num2;
+
+                            }
+                        inserted = true;
+                        }
+                    x++;
+                    }
+
+                    inserted = true;
+                }
+          
+
+            return inserted;
+
         }
     }
     
