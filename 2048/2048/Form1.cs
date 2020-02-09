@@ -29,7 +29,7 @@ namespace _2048
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH];
-        private int[] scoreTable = { 0, 0, 0, 0, 0 };   // initialise array with 0 values
+        private int[] scoreTable = { 204800, 40, 20, 5, 4 };   // initialise array with 0 values
         private int score = 0;
         private Label scoreLabel;
         private Button undoButton;
@@ -58,7 +58,7 @@ namespace _2048
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
-            saveToFile();
+           
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -665,6 +665,23 @@ namespace _2048
             }
         }
 
+
+        public void loadFromFile()
+        {
+            
+            string line;
+            int a = 0;
+
+            // Read the file and display it line by line.  
+            System.IO.StreamReader file = new System.IO.StreamReader("score.txt");
+            while ((line = file.ReadLine()) != null)
+            {
+                scoreTable[a] = int.Parse(line);
+                a++;
+            }
+            file.Close();
+        }
+
         public void saveToFile()
         {
             if (inserScore()) //if the scoreboard changed
@@ -676,7 +693,7 @@ namespace _2048
                     {
 
 
-                        file.WriteLine(number.ToString(),true);
+                        file.WriteLine(number.ToString());
                     }
                 }
             }
@@ -694,14 +711,14 @@ namespace _2048
 
             int tableLenght = scoreTable.Length;
            
-            if (score < scoreTable[tableLenght-1]) //score is lower then the top 5 so it will not be inserted to the table
+            if (score <= scoreTable[tableLenght-1]) //score is lower then the top 5 so it will not be inserted to the table
             {
                    inserted = false;
             }
             else
                 {
                     int x = 0;
-                    while(!inserted)
+                    while(!inserted && x < tableLenght)
                     { 
                         
                         if(score > scoreTable[x])
@@ -720,12 +737,18 @@ namespace _2048
                     x++;
                     }
 
-                    inserted = true;
+                    
                 }
           
 
             return inserted;
 
+        }
+
+        private void scoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ScoreTable table = new ScoreTable(scoreTable);
+            table.Show();
         }
     }
     
