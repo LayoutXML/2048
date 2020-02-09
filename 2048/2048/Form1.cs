@@ -8,7 +8,7 @@ namespace _2048
     public partial class Form1 : Form
     {
         // constants
-        public const int BOARD_WIDTH = 50;
+        public const int BOARD_WIDTH = 4;
         private const int TOP_MARGIN = 136; //multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
@@ -315,6 +315,7 @@ namespace _2048
 
         private void RulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            /*
             // Initialise variables of the MessageBox
             string message = "Combine two squares with the same value to make one square with a two times larger value.\n" +
                 "Make a square with value 2048 to win the game.\n\n" +
@@ -327,6 +328,8 @@ namespace _2048
             DialogResult result;
             // Display the MessageBox
             result = MessageBox.Show(message, caption, button);
+            */
+            Form2 ruleForm = new Form2();
         }
 
         private bool MoveUp()
