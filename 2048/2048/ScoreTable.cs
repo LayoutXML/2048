@@ -31,15 +31,16 @@ namespace _2048
             InitializeComponent();
             curScores = scores;
             this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
-            this.Size = new Size(SIDE_MARGIN*2+200, TOP_MARGIN+LABEL_HEIGHT*6+ BOTTOM_MARGIN);
+            this.Size = new Size(SIDE_MARGIN*2+200, TOP_MARGIN+LABEL_HEIGHT*6+ BOTTOM_MARGIN); //sets the size
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
 
             createLabel("Top Scores", (SIDE_MARGIN * 2) / 2 + FONT_SIZE_DEFAULT*2, TOP_MARGIN, new Font(FONT, FONT_SIZE_DEFAULT, FontStyle.Bold));
 
             int y = 0;
             while(y < curScores.Length && curScores[y] != 0)
             {
-              
-
                 createLabel((y + 1).ToString() + ".", SIDE_MARGIN, TOP_MARGIN + LABEL_HEIGHT + y * LABEL_HEIGHT, new Font(FONT, FONT_SIZE_DEFAULT, FontStyle.Bold));
                 createLabel(curScores[y].ToString(), SIDE_MARGIN + 2 * FONT_SIZE_DEFAULT, TOP_MARGIN + LABEL_HEIGHT + y * LABEL_HEIGHT, new Font(FONT, FONT_SIZE_DEFAULT, FontStyle.Bold));
                 y++;
@@ -53,8 +54,6 @@ namespace _2048
             label.Text = text;
             label.Location = new Point(xlocation, ylocation);
             label.Font = font;
-
-         
             Controls.Add(label);
         }
     }

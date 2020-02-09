@@ -24,12 +24,13 @@ namespace _2048
         private const int FONT_SIZE_SMALL = 18;
         private const int FONT_SIZE_EXTRA_SMALL = 12;
         private const bool IS_HARD_MODE = false;
+        private const string SAVE_FILE = "scores.txt";
 
 
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH];
-        private int[] scoreTable = { 204800, 40, 20, 5, 4 };   // initialise array with 0 values
+        private int[] scoreTable = { 0, 0, 0, 0, 0 };   // initialise array with 0 values
         private int score = 0;
         private Label scoreLabel;
         private Button undoButton;
@@ -58,6 +59,7 @@ namespace _2048
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
+            loadFromFile();
            
         }
 
@@ -311,6 +313,7 @@ namespace _2048
         private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // restart game grid
+            saveToFile();
             score = 0;
             RestartGame();
         }
@@ -589,9 +592,11 @@ namespace _2048
         public void RestartGame()
         {
             // restart game grid
+           
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
             GenerateNumber(2, -1);
             Redraw();
+            
         }
 
         protected override bool ProcessCmdKey(ref Message message, Keys key)
@@ -668,30 +673,29 @@ namespace _2048
 
         public void loadFromFile()
         {
-            
-            string line;
-            int a = 0;
-
-            // Read the file and display it line by line.  
-            System.IO.StreamReader file = new System.IO.StreamReader("score.txt");
-            while ((line = file.ReadLine()) != null)
+            if (System.IO.File.Exists(SAVE_FILE)) // Check if file exists
             {
-                scoreTable[a] = int.Parse(line);
-                a++;
+                string line;
+                int a = 0;
+
+                System.IO.StreamReader file = new System.IO.StreamReader(SAVE_FILE); // Open file
+                while ((line = file.ReadLine()) != null)
+                {
+                    scoreTable[a] = int.Parse(line); // read the contents of the file to the array
+                    a++;
+                }
+                file.Close();
             }
-            file.Close();
         }
 
         public void saveToFile()
         {
             if (inserScore()) //if the scoreboard changed
             {
-                using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter("score.txt"))
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(SAVE_FILE))
                 {
                     foreach (int number in scoreTable)
                     {
-
 
                         file.WriteLine(number.ToString());
                     }
@@ -747,8 +751,15 @@ namespace _2048
 
         private void scoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ScoreTable table = new ScoreTable(scoreTable);
-            table.Show();
+            if (scoreTable[0] != 0) //if there is something recorded in the score table
+            {
+                ScoreTable table = new ScoreTable(scoreTable);
+                table.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("No scores recorded!", "Error");
+            }
         }
     }
     
