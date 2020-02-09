@@ -59,7 +59,7 @@ namespace _2048
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
-            loadFromFile();
+            LoadFromFile();
            
         }
 
@@ -333,7 +333,6 @@ namespace _2048
             // Display the MessageBox
             result = MessageBox.Show(message, caption, button);
         }
-
         private bool MoveUp()
         {
             bool moved = false;
@@ -379,7 +378,6 @@ namespace _2048
             }
             return moved;
         }
-
         private bool MoveRight()
         {
             bool moved = false;
@@ -425,7 +423,6 @@ namespace _2048
             }
             return moved;
         }
-
         private bool MoveDown()
         {
             bool moved = false;
@@ -471,7 +468,6 @@ namespace _2048
             }
             return moved;
         }
-
         private bool MoveLeft()
         {
             bool moved = false;
@@ -517,7 +513,6 @@ namespace _2048
             }
             return moved;
         }
-
         public void Redraw()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)   //goes through the board and redraws the text
@@ -538,7 +533,6 @@ namespace _2048
             scoreLabel.Text = "Score: " + Convert.ToString(score); //updates scoreLabel text
 
         }
-
         public void ChangeColor(int x, int y)
         {
             int index = values[x, y] == 0 ? 0 : (int)Math.Log(values[x, y], 2);
@@ -561,7 +555,6 @@ namespace _2048
             }
             buttons[x, y].Font = new Font(FONT, fontSize, FontStyle.Bold); //font
         }
-
         private void AddScoreLabel()
         {
             scoreLabel = new Label();
@@ -573,7 +566,6 @@ namespace _2048
             scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); //font
             Controls.Add(scoreLabel);
         }
-
         private void AddUndoButton()
         {
             undoButton = new Button();
@@ -592,13 +584,10 @@ namespace _2048
         public void RestartGame()
         {
             // restart game grid
-           
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
             GenerateNumber(2, -1);
             Redraw();
-            
         }
-
         protected override bool ProcessCmdKey(ref Message message, Keys key)
         {
             bool moved = false;
@@ -658,7 +647,6 @@ namespace _2048
                 }
             }
         }
-
         public void Undo()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
@@ -669,15 +657,12 @@ namespace _2048
                 }
             }
         }
-
-
-        public void loadFromFile()
+        public void LoadFromFile()
         {
             if (System.IO.File.Exists(SAVE_FILE)) // Check if file exists
             {
                 string line;
                 int a = 0;
-
                 System.IO.StreamReader file = new System.IO.StreamReader(SAVE_FILE); // Open file
                 while ((line = file.ReadLine()) != null)
                 {
@@ -687,7 +672,6 @@ namespace _2048
                 file.Close();
             }
         }
-
         public void saveToFile()
         {
             if (inserScore()) //if the scoreboard changed
@@ -696,16 +680,11 @@ namespace _2048
                 {
                     foreach (int number in scoreTable)
                     {
-
                         file.WriteLine(number.ToString());
                     }
                 }
             }
-
-
         }
-   
-        
         public bool inserScore()
         {
             bool inserted = false;
@@ -723,8 +702,7 @@ namespace _2048
                 {
                     int x = 0;
                     while(!inserted && x < tableLenght)
-                    { 
-                        
+                    {  
                         if(score > scoreTable[x])
                         {
                             num1 = scoreTable[x];
@@ -740,15 +718,9 @@ namespace _2048
                         }
                     x++;
                     }
-
-                    
                 }
-          
-
             return inserted;
-
         }
-
         private void scoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (scoreTable[0] != 0) //if there is something recorded in the score table
