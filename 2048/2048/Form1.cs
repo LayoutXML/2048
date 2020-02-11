@@ -33,7 +33,9 @@ namespace _2048
         private int[] scoreTable = { 0, 0, 0, 0, 0 };   // initialise array with 0 values
         private int score = 0;
         private Label scoreLabel;
+        private Label gameOverLabel;
         private Button undoButton;
+
         public Form1()
         {
             InitializeComponent();
@@ -55,11 +57,12 @@ namespace _2048
             }
             AddScoreLabel();
             AddUndoButton();
+            AddGameOverLabel();
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
             LoadFromFile();
-           
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -72,9 +75,12 @@ namespace _2048
 
         private void UndoButton_Click(object sender, EventArgs e)
         {
-            Undo();
-            CopyValues();
-            Redraw();
+            if (CheckIfMovesAvailable())
+            {
+                Undo();
+                CopyValues();
+                Redraw();
+            }
         }
 
         private void ButtonEvent_Click(object sender, EventArgs e)
@@ -123,6 +129,12 @@ namespace _2048
                 GenerateNumber(1, direction);
                 Redraw();
             }
+
+            if (!CheckIfMovesAvailable())
+            {
+                gameOverLabel.Text = "Game Over";
+                gameOverLabel.Visible = true;
+            }
         }
 
         private void GenerateNumber(int amount, int direction)
@@ -131,7 +143,7 @@ namespace _2048
             if (amount == 1) // If we need to generate only 1 new number
             {
                 Coordinates coordinates = CheckOpenSpace(direction); // gets the coordinates of a space
-                if (coordinates == null) // if coordinates are null that means there are no more open spaces left
+                if (coordinates.x == -1 || coordinates.y == -1) // if coordinates are null that means there are no more open spaces left
                 {
                     //GAME OVER (NO MORE SPACE LEFT)
                     Console.WriteLine("ENDDD");
@@ -151,7 +163,7 @@ namespace _2048
 
         private Coordinates CheckOpenSpace(int direction)
         {
-            Coordinates OpenSpace = null;
+            Coordinates OpenSpace = new Coordinates(-1, -1);
             int count = 0; // the count of free spaces
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
@@ -322,6 +334,7 @@ namespace _2048
         {
             Form2 ruleForm = new Form2();
         }
+
         private bool MoveUp()
         {
             bool moved = false;
@@ -335,6 +348,11 @@ namespace _2048
                     {
                         newColumn.Add(value * 2);
                         score += value * 2;
+                        if (value * 2 == 2048)
+                        {
+                            gameOverLabel.Text = "You Won!";
+                            gameOverLabel.Visible = true;
+                        }
                         value = 0;
                     }
                     else
@@ -367,6 +385,7 @@ namespace _2048
             }
             return moved;
         }
+
         private bool MoveRight()
         {
             bool moved = false;
@@ -412,6 +431,7 @@ namespace _2048
             }
             return moved;
         }
+
         private bool MoveDown()
         {
             bool moved = false;
@@ -457,6 +477,7 @@ namespace _2048
             }
             return moved;
         }
+
         private bool MoveLeft()
         {
             bool moved = false;
@@ -502,6 +523,7 @@ namespace _2048
             }
             return moved;
         }
+
         public void Redraw()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)   // goes through the board and redraws the text
@@ -548,19 +570,16 @@ namespace _2048
         private void AddScoreLabel()
         {
             scoreLabel = new Label();
-            scoreLabel.Size = new Size(BOARD_WIDTH * TILE_WIDTH, 32);
-            int xScoreLabel = SIDE_MARGIN;
-            int yScoreLabel = TOP_MARGIN - 32;
-            scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
-            scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); // font
-            scoreLabel.TextAlign = ContentAlignment.MiddleRight;
+            scoreLabel.AutoSize = true;
+            scoreLabel.Location = new Point(SIDE_MARGIN, TOP_MARGIN - TILE_WIDTH / 2);
+            scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); //font
             Controls.Add(scoreLabel);
         }
 
         private void AddUndoButton()
         {
             undoButton = new Button();
-            undoButton.SetBounds(SIDE_MARGIN - TILE_MARGIN, TOP_MARGIN - TILE_MARGIN - TILE_WIDTH, TILE_WIDTH, TILE_WIDTH / 2);
+            undoButton.SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1), TOP_MARGIN - TILE_MARGIN - TILE_WIDTH / 2 - 8, TILE_WIDTH, TILE_WIDTH / 2);
             undoButton.Click += new EventHandler(this.UndoButton_Click);
             undoButton.FlatStyle = FlatStyle.Flat;
             undoButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
@@ -572,12 +591,24 @@ namespace _2048
             Controls.Add(undoButton);
         }
 
+        private void AddGameOverLabel()
+        {
+            gameOverLabel = new Label();
+            gameOverLabel.AutoSize = true;
+            gameOverLabel.Location = new Point(SIDE_MARGIN, TOP_MARGIN - TILE_WIDTH - TILE_MARGIN);
+            gameOverLabel.Font = new Font(FONT, FONT_SIZE_DEFAULT, FontStyle.Bold); //font
+            gameOverLabel.Visible = false;
+            Controls.Add(gameOverLabel);
+        }
+
         public void RestartGame()
         {
             // restart game grid
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
             GenerateNumber(2, -1);
             Redraw();
+            gameOverLabel.Text = "";
+            gameOverLabel.Visible = false;
         }
         protected override bool ProcessCmdKey(ref Message message, Keys key)
         {
@@ -619,6 +650,12 @@ namespace _2048
             {
                 GenerateNumber(1, direction);
                 Redraw();
+            }
+
+            if (!CheckIfMovesAvailable())
+            {
+                gameOverLabel.Text = "Game Over";
+                gameOverLabel.Visible = true;
             }
 
             if (processed)
@@ -680,12 +717,12 @@ namespace _2048
         public bool InsertScore()
         {
             bool inserted = false;
-            
+
             int num1;   // used for swaping values
             int num2;
 
             int tableLenght = scoreTable.Length;
-           
+
             if (score <= scoreTable[tableLenght-1]) // score is lower then the top 5 so it will not be inserted to the table
             {
                    inserted = false;
@@ -694,7 +731,7 @@ namespace _2048
                 {
                     int x = 0;
                     while(!inserted && x < tableLenght)
-                    {  
+                    {
                         if(score > scoreTable[x])
                         {
                             num1 = scoreTable[x];
@@ -714,7 +751,7 @@ namespace _2048
             return inserted;
         }
 
-        private void scoresToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ScoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (scoreTable[0] != 0) // if there is something recorded in the score table
             {
@@ -726,6 +763,45 @@ namespace _2048
                 MessageBox.Show("No scores recorded!", "Error");
             }
         }
+
+        private bool CheckIfMovesAvailable()
+        {
+            bool isEmpty = false;
+            bool isConcecutive = false;
+            for (int x = 0; x < BOARD_WIDTH; x++)
+            {
+                for (int y = 0; y < BOARD_WIDTH; y++)
+                {
+                    if (values[x, y] == 0)
+                    {
+                        isEmpty = true;
+                    }
+                    if (y > 0)
+                    {
+                        if (values[x, y - 1] == values[x, y])
+                        {
+                            isConcecutive = true;
+                        }
+                        if (values[y - 1, x] == values[y, x])
+                        {
+                            isConcecutive = true;
+                        }
+                    }
+                    if (y < BOARD_WIDTH - 1)
+                    {
+                        if (values[x, y] == values[x, y + 1])
+                        {
+                            isConcecutive = true;
+                        }
+                        if (values[y, x] == values[y + 1, x])
+                        {
+                            isConcecutive = true;
+                        }
+                    }
+                }
+            }
+            return isConcecutive || isEmpty;
+        }
     }
-    
+
 }
