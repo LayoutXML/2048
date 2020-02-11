@@ -97,7 +97,7 @@
             this.scoresToolStripMenuItem.Name = "scoresToolStripMenuItem";
             this.scoresToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.scoresToolStripMenuItem.Text = "Scores";
-            this.scoresToolStripMenuItem.Click += new System.EventHandler(this.scoresToolStripMenuItem_Click);
+            this.scoresToolStripMenuItem.Click += new System.EventHandler(this.ScoresToolStripMenuItem_Click);
             // 
             // Form1
             // 
