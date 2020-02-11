@@ -8,7 +8,7 @@ namespace _2048
     public partial class Form1 : Form
     {
         // constants
-        public const int BOARD_WIDTH = 4;
+        public const int BOARD_WIDTH = 4; // board size, allowed to be changed before launching the game
         private const int TOP_MARGIN = 136; // multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
@@ -23,13 +23,12 @@ namespace _2048
         private const int FONT_SIZE_DEFAULT = 24;
         private const int FONT_SIZE_SMALL = 18;
         private const int FONT_SIZE_EXTRA_SMALL = 12;
-        private const bool IS_HARD_MODE = true;
         private const string SAVE_FILE = "scores.txt";
 
-
+        private bool isHardMode = false;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
-        private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH];
+        private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH]; // used for undo functionality
         private int[] scoreTable = { 0, 0, 0, 0, 0 };   // initialise array with 0 values
         private int score = 0;
         private Label scoreLabel;
@@ -152,13 +151,16 @@ namespace _2048
                 }
                 int number = random.Next(0, 1) == 0 ? 2 : 4; // generate a random number and decide if it's a 2 or a 4
                 values[coordinates.x, coordinates.y] = number;
+                oldValues[coordinates.x, coordinates.y] = number;
             }
             else // if we need 2 numbers
             {
                 Coordinates coordinates = CheckOpenSpace(direction); // gets the coordinates of a space
                 values[coordinates.x, coordinates.y] = 4;
+                oldValues[coordinates.x, coordinates.y] = 4;
                 coordinates = CheckOpenSpace(direction);
                 values[coordinates.x, coordinates.y] = 2;
+                oldValues[coordinates.x, coordinates.y] = 2;
             }
         }
 
@@ -182,8 +184,12 @@ namespace _2048
             }
             if (count > 1) // if there are more then 1 open space available
             {
-                if (IS_HARD_MODE && direction != -1)
+                if (isHardMode && direction != -1)
                 {
+                    /* The idea with hard mode is that it places the newly generated tiles in the worst possible position
+                     * The worst position is along the edge opposite to the previous move, right next to the highest value on that row/column
+                     * Placing it in the opposite direction next to the highest value makes it harder to group values together before merging
+                     */
                     int[] maxValues = new int[BOARD_WIDTH];
                     int[] xCoordinates = new int[BOARD_WIDTH];
                     int[] yCoordinates = new int[BOARD_WIDTH];
@@ -300,7 +306,7 @@ namespace _2048
                         OpenSpace = new Coordinates(finalX, finalY);
                     }
                 }
-                if (!IS_HARD_MODE || direction == -1)
+                if (!isHardMode || direction == -1)
                 {
                     Random random = new Random();
                     int x, y;
@@ -321,14 +327,6 @@ namespace _2048
         {
             SaveToFile();
             Close();
-        }
-
-        private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // restart game grid
-            SaveToFile();
-            score = 0;
-            RestartGame();
         }
 
         private void RulesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -616,15 +614,31 @@ namespace _2048
             Controls.Add(gameOverLabel);
         }
 
+        private void RestartNormalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            isHardMode = false;
+            RestartGame();
+        }
+
+        private void RestartHardagainstAIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            isHardMode = true;
+            RestartGame();
+        }
+
         public void RestartGame()
         {
             // restart game grid
+            SaveToFile();
+            score = 0;
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
+            Array.Clear(oldValues, 0, BOARD_WIDTH * BOARD_WIDTH);
             GenerateNumber(2, -1);
             Redraw();
             gameOverLabel.Text = "";
             gameOverLabel.Visible = false;
         }
+
         protected override bool ProcessCmdKey(ref Message message, Keys key)
         {
             bool moved = false;
