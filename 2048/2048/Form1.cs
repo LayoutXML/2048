@@ -9,7 +9,7 @@ namespace _2048
     {
         // constants
         public const int BOARD_WIDTH = 4;
-        private const int TOP_MARGIN = 136; //multiple of 8 for consistency
+        private const int TOP_MARGIN = 136; // multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
         private const int SIDE_MARGIN = 80;
         private const int TILE_WIDTH = 80;
@@ -23,7 +23,7 @@ namespace _2048
         private const int FONT_SIZE_DEFAULT = 24;
         private const int FONT_SIZE_SMALL = 18;
         private const int FONT_SIZE_EXTRA_SMALL = 12;
-        private const bool IS_HARD_MODE = false;
+        private const bool IS_HARD_MODE = true;
         private const string SAVE_FILE = "scores.txt";
 
 
@@ -296,7 +296,7 @@ namespace _2048
                     {
                         x = random.Next(0, BOARD_WIDTH);
                         y = random.Next(0, BOARD_WIDTH);
-                    } while (values[x, y] != 0); //repeat the loop until an open space is found
+                    } while (values[x, y] != 0); // repeat the loop until an open space is found
                     OpenSpace = new Coordinates(x, y);
                 }
 
@@ -307,13 +307,14 @@ namespace _2048
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            SaveToFile();
             Close();
         }
 
         private void RestartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // restart game grid
-            saveToFile();
+            SaveToFile();
             score = 0;
             RestartGame();
         }
@@ -518,7 +519,7 @@ namespace _2048
         }
         public void Redraw()
         {
-            for (int x = 0; x < BOARD_WIDTH; x++)   //goes through the board and redraws the text
+            for (int x = 0; x < BOARD_WIDTH; x++)   // goes through the board and redraws the text
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
                 {
@@ -528,14 +529,14 @@ namespace _2048
                     }
                     else
                     {
-                        buttons[x, y].Text = values[x, y].ToString(); //sets the button text to the correct value
+                        buttons[x, y].Text = values[x, y].ToString(); // sets the button text to the correct value
                     }
-                    ChangeColor(x, y); //changes the button text and background colors
+                    ChangeColor(x, y); // changes the button text and background colors
                 }
             }
-            scoreLabel.Text = "Score: " + Convert.ToString(score); //updates scoreLabel text
-
+            scoreLabel.Text = "Score: " + Convert.ToString(score); // updates scoreLabel text
         }
+
         public void ChangeColor(int x, int y)
         {
             int index = values[x, y] == 0 ? 0 : (int)Math.Log(values[x, y], 2);
@@ -558,6 +559,7 @@ namespace _2048
             }
             buttons[x, y].Font = new Font(FONT, fontSize, FontStyle.Bold); //font
         }
+
         private void AddScoreLabel()
         {
             scoreLabel = new Label();
@@ -569,6 +571,7 @@ namespace _2048
             scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); //font
             Controls.Add(scoreLabel);
         }
+
         private void AddUndoButton()
         {
             undoButton = new Button();
@@ -675,20 +678,21 @@ namespace _2048
                 file.Close();
             }
         }
-        public void saveToFile()
+
+        public void SaveToFile()
         {
-            if (inserScore()) //if the scoreboard changed
+            if (InsertScore()) // if the scoreboard changed
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(SAVE_FILE))
+                System.IO.StreamWriter file = new System.IO.StreamWriter(SAVE_FILE);
+                for(int x = 0; x < scoreTable.Length; x++)
                 {
-                    foreach (int number in scoreTable)
-                    {
-                        file.WriteLine(number.ToString());
-                    }
+                    file.WriteLine(scoreTable[x]);
                 }
+                file.Close();
             }
         }
-        public bool inserScore()
+
+        public bool InsertScore()
         {
             bool inserted = false;
             
@@ -697,7 +701,7 @@ namespace _2048
 
             int tableLenght = scoreTable.Length;
            
-            if (score <= scoreTable[tableLenght-1]) //score is lower then the top 5 so it will not be inserted to the table
+            if (score <= scoreTable[tableLenght-1]) // score is lower then the top 5 so it will not be inserted to the table
             {
                    inserted = false;
             }
@@ -724,9 +728,10 @@ namespace _2048
                 }
             return inserted;
         }
+
         private void scoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (scoreTable[0] != 0) //if there is something recorded in the score table
+            if (scoreTable[0] != 0) // if there is something recorded in the score table
             {
                 ScoreTable table = new ScoreTable(scoreTable);
                 table.ShowDialog();
