@@ -1,6 +1,6 @@
 ﻿namespace _2048
 {
-    partial class ScoreTable
+    partial class ScoreTableForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,10 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScoreTableForm));
+            this.SuspendLayout();
+            // 
+            // ScoreTableForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "ScoreTable";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "ScoreTableForm";
+            this.Text = "Score Table";
+            this.ResumeLayout(false);
+
         }
 
         #endregion

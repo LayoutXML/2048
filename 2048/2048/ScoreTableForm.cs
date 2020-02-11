@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace _2048
 {
-    public partial class ScoreTable : Form
+    public partial class ScoreTableForm : Form
     {
         private const string FONT = "Courier New";
         private const int FONT_SIZE_DEFAULT = 18;
@@ -22,11 +22,11 @@ namespace _2048
         private const int LABEL_HEIGHT = 40;
        
         int[] curScores;
-        public ScoreTable()
+        public ScoreTableForm()
         {
             InitializeComponent();
         }
-        public ScoreTable(int[] scores)
+        public ScoreTableForm(int[] scores)
         {
             InitializeComponent();
             curScores = scores;

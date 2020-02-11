@@ -1,6 +1,6 @@
 ﻿namespace _2048
 {
-    partial class Form1
+    partial class GameForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,41 +80,41 @@
             this.normalToolStripMenuItem,
             this.hardagainstAIToolStripMenuItem});
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.restartToolStripMenuItem.Text = "Restart";
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.RestartNormalToolStripMenuItem_Click);
             // 
             // hardagainstAIToolStripMenuItem
             // 
             this.hardagainstAIToolStripMenuItem.Name = "hardagainstAIToolStripMenuItem";
-            this.hardagainstAIToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hardagainstAIToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.hardagainstAIToolStripMenuItem.Text = "Hard (against AI)";
             this.hardagainstAIToolStripMenuItem.Click += new System.EventHandler(this.RestartHardagainstAIToolStripMenuItem_Click);
             // 
             // scoresToolStripMenuItem
             // 
             this.scoresToolStripMenuItem.Name = "scoresToolStripMenuItem";
-            this.scoresToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.scoresToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.scoresToolStripMenuItem.Text = "Scores";
             this.scoresToolStripMenuItem.Click += new System.EventHandler(this.ScoresToolStripMenuItem_Click);
             // 
             // rulesToolStripMenuItem
             // 
             this.rulesToolStripMenuItem.Name = "rulesToolStripMenuItem";
-            this.rulesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rulesToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.rulesToolStripMenuItem.Text = "Rules";
             this.rulesToolStripMenuItem.Click += new System.EventHandler(this.RulesToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -124,6 +125,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.menuStrip2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "2048";
