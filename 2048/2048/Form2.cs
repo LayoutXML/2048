@@ -12,11 +12,16 @@ namespace _2048
 {
     public partial class Form2 : Form
     {
-        private const int TOP_MARGIN = 80; //multiple of 8 for consistency
-        private const int BOTTOM_MARGIN = 80;
-        private const int SIDE_MARGIN = 80;
+        private const int TOP_MARGIN = 96; //multiple of 8 for consistency
+        private const int BOTTOM_MARGIN = 96;
+        private const int SIDE_MARGIN = 96;
         private const int BUTTON_WIDTH = 120;
         private const int BUTTON_HEIGHT = 40;
+        private readonly string[] COLORS = new[] { "#CDC1B5", "#EEE4DB", "#F1E2CE", "#F0B57D", "#F19F64", "#F77E73", "#FD5644", "#F1D275", "#F1D275", "#E6C847", "#EDBE4A", "#EFBE45" };
+        private const string BACKGROUND_COLOR = "#faf8ef";
+        private const string DEFAULT_TEXT_COLOR = "#000000";
+        private const string FONT = "Courier New";
+        private const int FONT_SIZE_EXTRA_SMALL = 12;
 
         private Button movementRuleButton;
         private Button winRuleButton;
@@ -39,6 +44,7 @@ namespace _2048
         {
             InitializeComponent();
 
+            BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
             Size = new Size(SIDE_MARGIN * 2 + BUTTON_WIDTH * 3, TOP_MARGIN + BOTTOM_MARGIN + BUTTON_HEIGHT);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -65,6 +71,12 @@ namespace _2048
             movementRuleButton.SetBounds(SIDE_MARGIN, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
             movementRuleButton.Click += new EventHandler(this.MovementButton_Click);
             movementRuleButton.Text = "MOVEMENT";
+            movementRuleButton.FlatStyle = FlatStyle.Flat;
+            movementRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            movementRuleButton.FlatAppearance.BorderSize = 4;
+            movementRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            movementRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            movementRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
             Controls.Add(movementRuleButton);
         }
 
@@ -74,6 +86,12 @@ namespace _2048
             winRuleButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
             winRuleButton.Click += new EventHandler(this.WinButton_Click);
             winRuleButton.Text = "GOAL";
+            winRuleButton.FlatStyle = FlatStyle.Flat;
+            winRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            winRuleButton.FlatAppearance.BorderSize = 4;
+            winRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            winRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            winRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
             Controls.Add(winRuleButton);
         }
 
@@ -83,6 +101,12 @@ namespace _2048
             loseRuleButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH * 2, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
             loseRuleButton.Click += new EventHandler(this.LoseButton_Click);
             loseRuleButton.Text = "LOSS";
+            loseRuleButton.FlatStyle = FlatStyle.Flat;
+            loseRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            loseRuleButton.FlatAppearance.BorderSize = 4;
+            loseRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            loseRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            loseRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
             Controls.Add(loseRuleButton);
         }
 
@@ -92,6 +116,12 @@ namespace _2048
             backButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH, TOP_MARGIN + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
             backButton.Click += new EventHandler(this.BackButton_Click);
             backButton.Text = "BACK";
+            backButton.FlatStyle = FlatStyle.Flat;
+            backButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            backButton.FlatAppearance.BorderSize = 4;
+            backButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            backButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            backButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
             backButton.Visible = false;
             Controls.Add(backButton);
         }
@@ -99,9 +129,9 @@ namespace _2048
         private void AddRuleLabel()
         {
             ruleLabel = new Label();
-            //ruleLabel.AutoSize = true;
-            ruleLabel.Size = new Size(SIDE_MARGIN * 2 + BUTTON_WIDTH * 3, TOP_MARGIN + BOTTOM_MARGIN);
+            ruleLabel.Size = new Size(SIDE_MARGIN * 2 + BUTTON_WIDTH * 3, TOP_MARGIN + BUTTON_HEIGHT);
             ruleLabel.TextAlign = ContentAlignment.MiddleCenter;
+            ruleLabel.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL);
             Controls.Add(ruleLabel);
         }
 
@@ -142,6 +172,5 @@ namespace _2048
             ruleLabel.Visible = true;
             backButton.Visible = true;
         }
-
     }
 }

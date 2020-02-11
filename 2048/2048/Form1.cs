@@ -38,7 +38,6 @@ namespace _2048
         {
             InitializeComponent();
             this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
-            menuStrip2.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
             menuStrip1.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
@@ -321,20 +320,6 @@ namespace _2048
 
         private void RulesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*
-            // Initialise variables of the MessageBox
-            string message = "Combine two squares with the same value to make one square with a two times larger value.\n" +
-                "Make a square with value 2048 to win the game.\n\n" +
-                "Press top row's middle buttons to move up.\n" +
-                "Press bottom row's middle buttons to move down.\n" +
-                "Press left collumn's middle buttons to move left.\n" +
-                "Press right collumn's middle buttons to move right.\n";
-            string caption = "Rules";
-            MessageBoxButtons button = MessageBoxButtons.OK;
-            DialogResult result;
-            // Display the MessageBox
-            result = MessageBox.Show(message, caption, button);
-            */
             Form2 ruleForm = new Form2();
         }
         private bool MoveUp()
@@ -563,12 +548,12 @@ namespace _2048
         private void AddScoreLabel()
         {
             scoreLabel = new Label();
-            scoreLabel.AutoSize = true;
-            int tile_margin = 16;
-            int xScoreLabel = SIDE_MARGIN - tile_margin + (TILE_WIDTH - tile_margin) * (BOARD_WIDTH - 1);
-            int yScoreLabel = TOP_MARGIN - tile_margin * 2;
+            scoreLabel.Size = new Size(BOARD_WIDTH * TILE_WIDTH, 32);
+            int xScoreLabel = SIDE_MARGIN;
+            int yScoreLabel = TOP_MARGIN - 32;
             scoreLabel.Location = new Point(xScoreLabel, yScoreLabel);
-            scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); //font
+            scoreLabel.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold); // font
+            scoreLabel.TextAlign = ContentAlignment.MiddleRight;
             Controls.Add(scoreLabel);
         }
 
