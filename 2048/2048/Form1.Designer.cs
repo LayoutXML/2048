@@ -32,9 +32,11 @@
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hardagainstAIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.scoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.scoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,10 +75,33 @@
             // 
             // restartToolStripMenuItem
             // 
+            this.restartToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.normalToolStripMenuItem,
+            this.hardagainstAIToolStripMenuItem});
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
             this.restartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.restartToolStripMenuItem.Text = "Restart";
-            this.restartToolStripMenuItem.Click += new System.EventHandler(this.RestartToolStripMenuItem_Click);
+            // 
+            // normalToolStripMenuItem
+            // 
+            this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.normalToolStripMenuItem.Text = "Normal";
+            this.normalToolStripMenuItem.Click += new System.EventHandler(this.RestartNormalToolStripMenuItem_Click);
+            // 
+            // hardagainstAIToolStripMenuItem
+            // 
+            this.hardagainstAIToolStripMenuItem.Name = "hardagainstAIToolStripMenuItem";
+            this.hardagainstAIToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.hardagainstAIToolStripMenuItem.Text = "Hard (against AI)";
+            this.hardagainstAIToolStripMenuItem.Click += new System.EventHandler(this.RestartHardagainstAIToolStripMenuItem_Click);
+            // 
+            // scoresToolStripMenuItem
+            // 
+            this.scoresToolStripMenuItem.Name = "scoresToolStripMenuItem";
+            this.scoresToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.scoresToolStripMenuItem.Text = "Scores";
+            this.scoresToolStripMenuItem.Click += new System.EventHandler(this.ScoresToolStripMenuItem_Click);
             // 
             // rulesToolStripMenuItem
             // 
@@ -91,13 +116,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
-            // 
-            // scoresToolStripMenuItem
-            // 
-            this.scoresToolStripMenuItem.Name = "scoresToolStripMenuItem";
-            this.scoresToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.scoresToolStripMenuItem.Text = "Scores";
-            this.scoresToolStripMenuItem.Click += new System.EventHandler(this.ScoresToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -126,6 +144,8 @@
         private System.Windows.Forms.ToolStripMenuItem rulesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem scoresToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem normalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hardagainstAIToolStripMenuItem;
     }
 }
 
