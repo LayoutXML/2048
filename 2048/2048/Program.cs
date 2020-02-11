@@ -8,7 +8,7 @@ namespace _2048
 {
     static class Program
     {
-        public static Form1 mainForm;
+        public static GameForm mainForm;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,7 +17,7 @@ namespace _2048
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            mainForm = new Form1();
+            mainForm = new GameForm();
             Application.Run(mainForm);
         }
     }

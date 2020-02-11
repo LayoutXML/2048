@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace _2048
 {
-    public partial class Form1 : Form
+    public partial class GameForm : Form
     {
         // constants
         public const int BOARD_WIDTH = 4; // board size, allowed to be changed before launching the game
@@ -35,7 +35,7 @@ namespace _2048
         private Label gameOverLabel;
         private Button undoButton;
 
-        public Form1()
+        public GameForm()
         {
             InitializeComponent();
             this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
@@ -345,7 +345,7 @@ namespace _2048
             // Display the MessageBox
             result = MessageBox.Show(message, caption, button);
             */
-            Form2 ruleForm = new Form2();
+            RulesForm ruleForm = new RulesForm();
         }
 
         private bool MoveUp()
@@ -784,7 +784,7 @@ namespace _2048
         {
             if (scoreTable[0] != 0) // if there is something recorded in the score table
             {
-                ScoreTable table = new ScoreTable(scoreTable);
+                ScoreTableForm table = new ScoreTableForm(scoreTable);
                 table.ShowDialog();
             }
             else

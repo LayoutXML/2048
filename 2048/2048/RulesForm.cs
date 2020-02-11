@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace _2048
 {
-    public partial class Form2 : Form
+    public partial class RulesForm : Form
     {
         private const int TOP_MARGIN = 80; //multiple of 8 for consistency
         private const int BOTTOM_MARGIN = 80;
@@ -35,7 +35,7 @@ namespace _2048
                 "(Grid is full and none of the squares can be combined.)"
         };
 
-        public Form2()
+        public RulesForm()
         {
             InitializeComponent();
 
@@ -143,5 +143,9 @@ namespace _2048
             backButton.Visible = true;
         }
 
+        private void Form2_Load_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
