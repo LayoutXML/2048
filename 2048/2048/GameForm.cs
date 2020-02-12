@@ -25,6 +25,11 @@ namespace _2048
         private const int FONT_SIZE_EXTRA_SMALL = 12;
         private const string SAVE_FILE = "scores.txt";
 
+        private const string BACKGROUND_MUSIC = "background.wav";
+
+        private System.Media.SoundPlayer Background_player = new System.Media.SoundPlayer(); // Background music
+
+        private bool soundOn = true;
         private bool isHardMode = false;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
@@ -34,13 +39,21 @@ namespace _2048
         private Label scoreLabel;
         private Label gameOverLabel;
         private Button undoButton;
+        private Button toogleSoundButton;
 
         public GameForm()
         {
             InitializeComponent();
             this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
             menuStrip2.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
-            menuStrip1.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
+
+
+            if (System.IO.File.Exists(BACKGROUND_MUSIC) && soundOn)
+            {
+                Background_player.SoundLocation = BACKGROUND_MUSIC;
+                Background_player.PlayLooping();
+            }
+
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
@@ -57,12 +70,15 @@ namespace _2048
             }
             AddScoreLabel();
             AddUndoButton();
+            AddSoundButton();
             AddGameOverLabel();
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
             LoadFromFile();
-           
+
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -82,7 +98,25 @@ namespace _2048
                 Redraw();
             }
         }
-
+        private void toogleSoundButton_Click(object sender, EventArgs e)
+        { 
+            if(soundOn)
+            {
+                Background_player.Stop();
+                toogleSoundButton.Text = "Sound OFF";
+                soundOn = false;
+            }
+            else
+            {
+                if (System.IO.File.Exists(BACKGROUND_MUSIC))
+                {
+                    Background_player.SoundLocation = BACKGROUND_MUSIC;
+                    Background_player.PlayLooping();
+                    toogleSoundButton.Text = "Sound ON";
+                    soundOn = true;
+                }
+            }
+        }
         private void ButtonEvent_Click(object sender, EventArgs e)
         {
             int clickedX = 0;
@@ -105,27 +139,32 @@ namespace _2048
             int direction = -1;
             if (clickedY == 0 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
             {
+                
                 moved = MoveUp();
                 direction = 0;
             }
             else if (clickedX == BOARD_WIDTH - 1 && (clickedY != 0 && clickedY != BOARD_WIDTH - 1))
             {
+                
                 moved = MoveRight();
                 direction = 1;
             }
             else if (clickedY == BOARD_WIDTH - 1 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
             {
+               
                 moved = MoveDown();
                 direction = 2;
             }
             else if (clickedX == 0 && (clickedY != 0 && clickedY != BOARD_WIDTH - 1))
             {
+                
                 moved = MoveLeft();
                 direction = 3;
             }
             Redraw();
             if (moved)
             {
+           
                 GenerateNumber(1, direction);
                 Redraw();
             }
@@ -603,7 +642,20 @@ namespace _2048
             undoButton.Text = "UNDO";
             Controls.Add(undoButton);
         }
-
+        private void AddSoundButton()
+        {
+            toogleSoundButton = new Button();
+            toogleSoundButton.SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1), TOP_MARGIN - TILE_MARGIN - TILE_WIDTH / 2 - 16 - TILE_WIDTH/2 , TILE_WIDTH, TILE_WIDTH / 2);
+            toogleSoundButton.Click += new EventHandler(this.toogleSoundButton_Click);
+            toogleSoundButton.FlatStyle = FlatStyle.Flat;
+            toogleSoundButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            toogleSoundButton.FlatAppearance.BorderSize = 4;
+            toogleSoundButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            toogleSoundButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            toogleSoundButton.Font = new Font(FONT, 7, FontStyle.Bold);
+            toogleSoundButton.Text = "Sound ON";
+            Controls.Add(toogleSoundButton);
+        }
         private void AddGameOverLabel()
         {
             gameOverLabel = new Label();
