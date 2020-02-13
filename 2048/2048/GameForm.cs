@@ -377,6 +377,12 @@ namespace _2048
             RulesForm ruleForm = new RulesForm();
         }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.ShowDialog();
+        }
+
         private bool MoveUp()
         {
             bool moved = false;
