@@ -92,7 +92,7 @@ namespace _2048
                 Redraw();
             }
         }
-        private void toogleSoundButton_Click(object sender, EventArgs e)
+        private void toggleSoundButton_Click(object sender, EventArgs e)
         { 
             if(soundOn)
             {
@@ -643,7 +643,7 @@ namespace _2048
         {
             toggleSoundButton = new Button();
             toggleSoundButton.SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1), TOP_MARGIN - TILE_MARGIN - TILE_WIDTH / 2 - 16 - TILE_WIDTH/2 , TILE_WIDTH, TILE_WIDTH / 2);
-            toggleSoundButton.Click += new EventHandler(this.toogleSoundButton_Click);
+            toggleSoundButton.Click += new EventHandler(this.toggleSoundButton_Click);
             toggleSoundButton.FlatStyle = FlatStyle.Flat;
             toggleSoundButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
             toggleSoundButton.FlatAppearance.BorderSize = 4;
