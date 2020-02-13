@@ -44,6 +44,7 @@ namespace _2048
         {
             InitializeComponent();
 
+            BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
             Size = new Size(SIDE_MARGIN * 2 + BUTTON_WIDTH * 3, TOP_MARGIN + BOTTOM_MARGIN + BUTTON_HEIGHT);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
