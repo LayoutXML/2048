@@ -24,11 +24,11 @@ namespace _2048
         private const int FONT_SIZE_EXTRA_SMALL = 12;
 
         private Button movementRuleButton;
-        private Button winRuleButton;
-        private Button loseRuleButton;
+        private Button goalRuleButton;
+        private Button lossRuleButton;
         private Button backButton;
         private Label ruleLabel;
-        private string[] rulesText = new string[] {"Combine two squares with the same value to make one square with a two times larger value.\n" +
+        private readonly string[] rulesText = new string[] {"Combine two squares with the same value to make one square with a two times larger value.\n" +
                 "Press top row's middle buttons to move UP.\n" +
                 "Press bottom row's middle buttons to move DOWN.\n" +
                 "Press left collumn's middle buttons to move LEFT.\n" +
@@ -51,8 +51,8 @@ namespace _2048
             MinimizeBox = false;
 
             AddMovementRuleButton();
-            AddWinRuleButton();
-            AddLoseRuleButton();
+            AddGoalRuleButton();
+            AddLossRuleButton();
             AddBackButton();
             AddRuleLabel();
 
@@ -80,34 +80,34 @@ namespace _2048
             Controls.Add(movementRuleButton);
         }
 
-        private void AddWinRuleButton()
+        private void AddGoalRuleButton()
         {
-            winRuleButton = new Button();
-            winRuleButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
-            winRuleButton.Click += new EventHandler(this.WinButton_Click);
-            winRuleButton.Text = "GOAL";
-            winRuleButton.FlatStyle = FlatStyle.Flat;
-            winRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
-            winRuleButton.FlatAppearance.BorderSize = 4;
-            winRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
-            winRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
-            winRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
-            Controls.Add(winRuleButton);
+            goalRuleButton = new Button();
+            goalRuleButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
+            goalRuleButton.Click += new EventHandler(this.WinButton_Click);
+            goalRuleButton.Text = "GOAL";
+            goalRuleButton.FlatStyle = FlatStyle.Flat;
+            goalRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            goalRuleButton.FlatAppearance.BorderSize = 4;
+            goalRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            goalRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            goalRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
+            Controls.Add(goalRuleButton);
         }
 
-        private void AddLoseRuleButton()
+        private void AddLossRuleButton()
         {
-            loseRuleButton = new Button();
-            loseRuleButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH * 2, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
-            loseRuleButton.Click += new EventHandler(this.LoseButton_Click);
-            loseRuleButton.Text = "LOSS";
-            loseRuleButton.FlatStyle = FlatStyle.Flat;
-            loseRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
-            loseRuleButton.FlatAppearance.BorderSize = 4;
-            loseRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
-            loseRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
-            loseRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
-            Controls.Add(loseRuleButton);
+            lossRuleButton = new Button();
+            lossRuleButton.SetBounds(SIDE_MARGIN + BUTTON_WIDTH * 2, TOP_MARGIN, BUTTON_WIDTH, BUTTON_HEIGHT);
+            lossRuleButton.Click += new EventHandler(this.LoseButton_Click);
+            lossRuleButton.Text = "LOSS";
+            lossRuleButton.FlatStyle = FlatStyle.Flat;
+            lossRuleButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            lossRuleButton.FlatAppearance.BorderSize = 4;
+            lossRuleButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            lossRuleButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            lossRuleButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
+            Controls.Add(lossRuleButton);
         }
 
         private void AddBackButton()
@@ -122,7 +122,7 @@ namespace _2048
             backButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
             backButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
             backButton.Font = new Font(FONT, FONT_SIZE_EXTRA_SMALL, FontStyle.Bold);
-            backButton.Visible = false;
+            backButton.Visible = false; // do not display backButton when RuleForm is opened
             Controls.Add(backButton);
         }
 
@@ -137,39 +137,39 @@ namespace _2048
 
         private void MovementButton_Click(object sender, EventArgs e)
         {
-            displayRule(0);
+            DisplayRule(0);
         }
 
         private void WinButton_Click(object sender, EventArgs e)
         {
-            displayRule(1);
+            DisplayRule(1);
         }
 
         private void LoseButton_Click(object sender, EventArgs e)
         {
-            displayRule(2);
+            DisplayRule(2);
         }
 
         private void BackButton_Click(object sender, EventArgs e)
         {
-            ruleLabel.Visible = false;
+            ruleLabel.Visible = false; // do not display ruleLabel and backButton
             backButton.Visible = false;
-            movementRuleButton.Visible = true;
-            winRuleButton.Visible = true;
-            loseRuleButton.Visible = true;
+            movementRuleButton.Visible = true; // display rule buttons
+            goalRuleButton.Visible = true;
+            lossRuleButton.Visible = true;
         }
 
-        private void displayRule(int ruleNumber)
+        private void DisplayRule(int ruleNumber)
         {
-            movementRuleButton.Visible = false;
-            winRuleButton.Visible = false;
-            loseRuleButton.Visible = false;
+            movementRuleButton.Visible = false; // do not display rule buttons
+            goalRuleButton.Visible = false;
+            lossRuleButton.Visible = false;
 
-            if (ruleNumber < rulesText.Length)
+            if (ruleNumber < rulesText.Length) // check if ruleNumber is not out of bounds of the array
             {
-                ruleLabel.Text = rulesText[ruleNumber];
+                ruleLabel.Text = rulesText[ruleNumber]; // set ruleLabel text to selected rule
             }
-            ruleLabel.Visible = true;
+            ruleLabel.Visible = true; // display ruleLabel and backButton
             backButton.Visible = true;
         }
     }
