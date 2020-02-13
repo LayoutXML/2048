@@ -638,6 +638,7 @@ namespace _2048
             undoButton.Text = "UNDO";
             Controls.Add(undoButton);
         }
+
         private void AddSoundButton()
         {
             toggleSoundButton = new Button();
