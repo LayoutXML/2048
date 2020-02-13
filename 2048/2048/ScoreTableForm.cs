@@ -22,13 +22,13 @@ namespace _2048
         private const int LABEL_HEIGHT = 40;
         private const int TILE_WIDTH = 80;
         private const string SAVE_FILE = "scores.txt";
-
-
         int[] curScores;
+
         public ScoreTableForm()
         {
             InitializeComponent();
         }
+
         public ScoreTableForm(int[] scores)
         {
             InitializeComponent();
@@ -49,8 +49,8 @@ namespace _2048
                 y++;
             }
             CreateResetButton();
-
         }
+
         public void CreateLabel(String text, int xlocation, int ylocation, Font font)
         {
             Label label = new Label();
@@ -60,6 +60,7 @@ namespace _2048
             label.Font = font;
             Controls.Add(label);
         }
+
        public void CreateResetButton()
         {
             Button resetButton = new Button();
@@ -73,8 +74,8 @@ namespace _2048
             resetButton.Font = new Font(FONT, FONT_SIZE_SMALL, FontStyle.Bold);
             resetButton.Text = "Reset Score";
             Controls.Add(resetButton);
-            
         }
+
         private void resetButton_Click(object sender, EventArgs e)
         {
             if (System.IO.File.Exists(SAVE_FILE))
