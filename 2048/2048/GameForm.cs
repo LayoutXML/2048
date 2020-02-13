@@ -25,6 +25,10 @@ namespace _2048
         private const int FONT_SIZE_EXTRA_SMALL = 12;
         private const string SAVE_FILE = "scores.txt";
 
+        private const string BACKGROUND_MUSIC = "background.wav";
+        private System.Media.SoundPlayer Background_player = new System.Media.SoundPlayer(); // Background music
+
+        private bool soundOn = true;
         private bool isHardMode = false;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
@@ -34,13 +38,19 @@ namespace _2048
         private Label scoreLabel;
         private Label gameOverLabel;
         private Button undoButton;
+        private Button toggleSoundButton;
 
         public GameForm()
         {
             InitializeComponent();
             this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
             menuStrip2.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
-            menuStrip1.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
+            if (System.IO.File.Exists(BACKGROUND_MUSIC) && soundOn) // Check if file exists
+            {
+                Background_player.SoundLocation = BACKGROUND_MUSIC;
+                Background_player.PlayLooping();
+            }
+
             for (int x = 0; x < BOARD_WIDTH; x++)
             {
                 for (int y = 0; y < BOARD_WIDTH; y++)
@@ -57,12 +67,12 @@ namespace _2048
             }
             AddScoreLabel();
             AddUndoButton();
+            AddSoundButton();
             AddGameOverLabel();
             GenerateNumber(2, -1);
             CopyValues();
             Redraw();
             LoadFromFile();
-           
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -80,6 +90,25 @@ namespace _2048
                 Undo();
                 CopyValues();
                 Redraw();
+            }
+        }
+        private void toggleSoundButton_Click(object sender, EventArgs e)
+        { 
+            if(soundOn)
+            {
+                Background_player.Stop();
+                toggleSoundButton.Text = "Sound OFF";
+                soundOn = false;
+            }
+            else
+            {
+                if (System.IO.File.Exists(BACKGROUND_MUSIC))
+                {
+                    Background_player.SoundLocation = BACKGROUND_MUSIC;
+                    Background_player.PlayLooping();
+                    toggleSoundButton.Text = "Sound ON";
+                    soundOn = true;
+                }
             }
         }
 
@@ -610,6 +639,20 @@ namespace _2048
             Controls.Add(undoButton);
         }
 
+        private void AddSoundButton()
+        {
+            toggleSoundButton = new Button();
+            toggleSoundButton.SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1), TOP_MARGIN - TILE_MARGIN - TILE_WIDTH / 2 - 16 - TILE_WIDTH/2 , TILE_WIDTH, TILE_WIDTH / 2);
+            toggleSoundButton.Click += new EventHandler(this.toggleSoundButton_Click);
+            toggleSoundButton.FlatStyle = FlatStyle.Flat;
+            toggleSoundButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            toggleSoundButton.FlatAppearance.BorderSize = 4;
+            toggleSoundButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            toggleSoundButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            toggleSoundButton.Font = new Font(FONT, 7, FontStyle.Bold);
+            toggleSoundButton.Text = "Sound ON";
+            Controls.Add(toggleSoundButton);
+        }
         private void AddGameOverLabel()
         {
             gameOverLabel = new Label();
@@ -710,6 +753,7 @@ namespace _2048
                 }
             }
         }
+
         public void Undo()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
@@ -720,6 +764,7 @@ namespace _2048
                 }
             }
         }
+
         public void LoadFromFile()
         {
             if (System.IO.File.Exists(SAVE_FILE)) // Check if file exists
