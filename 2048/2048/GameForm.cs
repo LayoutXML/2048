@@ -39,7 +39,7 @@ namespace _2048
         private Label scoreLabel;
         private Label gameOverLabel;
         private Button undoButton;
-        private Button toogleSoundButton;
+        private Button toggleSoundButton;
 
         public GameForm()
         {
@@ -103,7 +103,7 @@ namespace _2048
             if(soundOn)
             {
                 Background_player.Stop();
-                toogleSoundButton.Text = "Sound OFF";
+                toggleSoundButton.Text = "Sound OFF";
                 soundOn = false;
             }
             else
@@ -112,7 +112,7 @@ namespace _2048
                 {
                     Background_player.SoundLocation = BACKGROUND_MUSIC;
                     Background_player.PlayLooping();
-                    toogleSoundButton.Text = "Sound ON";
+                    toggleSoundButton.Text = "Sound ON";
                     soundOn = true;
                 }
             }
@@ -644,17 +644,17 @@ namespace _2048
         }
         private void AddSoundButton()
         {
-            toogleSoundButton = new Button();
-            toogleSoundButton.SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1), TOP_MARGIN - TILE_MARGIN - TILE_WIDTH / 2 - 16 - TILE_WIDTH/2 , TILE_WIDTH, TILE_WIDTH / 2);
-            toogleSoundButton.Click += new EventHandler(this.toogleSoundButton_Click);
-            toogleSoundButton.FlatStyle = FlatStyle.Flat;
-            toogleSoundButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
-            toogleSoundButton.FlatAppearance.BorderSize = 4;
-            toogleSoundButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
-            toogleSoundButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
-            toogleSoundButton.Font = new Font(FONT, 7, FontStyle.Bold);
-            toogleSoundButton.Text = "Sound ON";
-            Controls.Add(toogleSoundButton);
+            toggleSoundButton = new Button();
+            toggleSoundButton.SetBounds(SIDE_MARGIN - TILE_MARGIN + (TILE_WIDTH + TILE_MARGIN) * (BOARD_WIDTH - 1), TOP_MARGIN - TILE_MARGIN - TILE_WIDTH / 2 - 16 - TILE_WIDTH/2 , TILE_WIDTH, TILE_WIDTH / 2);
+            toggleSoundButton.Click += new EventHandler(this.toogleSoundButton_Click);
+            toggleSoundButton.FlatStyle = FlatStyle.Flat;
+            toggleSoundButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
+            toggleSoundButton.FlatAppearance.BorderSize = 4;
+            toggleSoundButton.BackColor = ColorTranslator.FromHtml(COLORS[0]);
+            toggleSoundButton.ForeColor = ColorTranslator.FromHtml(DEFAULT_TEXT_COLOR);
+            toggleSoundButton.Font = new Font(FONT, 7, FontStyle.Bold);
+            toggleSoundButton.Text = "Sound ON";
+            Controls.Add(toggleSoundButton);
         }
         private void AddGameOverLabel()
         {
