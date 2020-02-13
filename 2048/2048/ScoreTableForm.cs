@@ -21,6 +21,7 @@ namespace _2048
         private const int TOP_MARGIN = 24; // multiple of 8 for consistency
         private const int LABEL_HEIGHT = 40;
         private const int TILE_WIDTH = 80;
+        private const string SAVE_FILE = "scores.txt";
 
 
         int[] curScores;
@@ -61,11 +62,9 @@ namespace _2048
         }
        public void CreateResetButton()
         {
-            
             Button resetButton = new Button();
             resetButton.SetBounds(SIDE_MARGIN, TOP_MARGIN + LABEL_HEIGHT * 6 + 10 ,200,LABEL_HEIGHT);
-
-            // undoButton.Click += new EventHandler(this.UndoButton_Click);
+            resetButton.Click += new EventHandler(this.resetButton_Click);
             resetButton.FlatStyle = FlatStyle.Flat;
             resetButton.FlatAppearance.BorderColor = ColorTranslator.FromHtml("#bbada0");
             resetButton.FlatAppearance.BorderSize = 4;
@@ -75,6 +74,19 @@ namespace _2048
             resetButton.Text = "Reset Score";
             Controls.Add(resetButton);
             
+        }
+        private void resetButton_Click(object sender, EventArgs e)
+        {
+            if (System.IO.File.Exists(SAVE_FILE))
+            {
+                System.IO.File.Delete(SAVE_FILE); // deletes file
+                for (int i = 0; i < curScores.Length;i++) // clears the array
+                {
+                    curScores[i] = 0;
+                }
+                Close();
+                MessageBox.Show("All scores reset!", "Reset");
+            }
         }
     }
 }
