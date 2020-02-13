@@ -26,7 +26,6 @@ namespace _2048
         private const string SAVE_FILE = "scores.txt";
 
         private const string BACKGROUND_MUSIC = "background.wav";
-
         private System.Media.SoundPlayer Background_player = new System.Media.SoundPlayer(); // Background music
 
         private bool soundOn = true;
@@ -46,9 +45,7 @@ namespace _2048
             InitializeComponent();
             this.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR); //changes form background
             menuStrip2.BackColor = ColorTranslator.FromHtml(BACKGROUND_COLOR);
-
-
-            if (System.IO.File.Exists(BACKGROUND_MUSIC) && soundOn)
+            if (System.IO.File.Exists(BACKGROUND_MUSIC) && soundOn) // Check if file exists
             {
                 Background_player.SoundLocation = BACKGROUND_MUSIC;
                 Background_player.PlayLooping();
@@ -76,9 +73,6 @@ namespace _2048
             CopyValues();
             Redraw();
             LoadFromFile();
-
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -117,6 +111,7 @@ namespace _2048
                 }
             }
         }
+
         private void ButtonEvent_Click(object sender, EventArgs e)
         {
             int clickedX = 0;
@@ -139,32 +134,27 @@ namespace _2048
             int direction = -1;
             if (clickedY == 0 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
             {
-                
                 moved = MoveUp();
                 direction = 0;
             }
             else if (clickedX == BOARD_WIDTH - 1 && (clickedY != 0 && clickedY != BOARD_WIDTH - 1))
             {
-                
                 moved = MoveRight();
                 direction = 1;
             }
             else if (clickedY == BOARD_WIDTH - 1 && (clickedX != 0 && clickedX != BOARD_WIDTH - 1))
             {
-               
                 moved = MoveDown();
                 direction = 2;
             }
             else if (clickedX == 0 && (clickedY != 0 && clickedY != BOARD_WIDTH - 1))
             {
-                
                 moved = MoveLeft();
                 direction = 3;
             }
             Redraw();
             if (moved)
             {
-           
                 GenerateNumber(1, direction);
                 Redraw();
             }
@@ -756,6 +746,7 @@ namespace _2048
                 }
             }
         }
+
         public void Undo()
         {
             for (int x = 0; x < BOARD_WIDTH; x++)
@@ -766,6 +757,7 @@ namespace _2048
                 }
             }
         }
+
         public void LoadFromFile()
         {
             if (System.IO.File.Exists(SAVE_FILE)) // Check if file exists
