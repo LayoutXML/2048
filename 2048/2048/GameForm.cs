@@ -30,11 +30,13 @@ namespace _2048
 
         private bool soundOn = true;
         private bool isHardMode = false;
+        private bool isSaved = false;
         private readonly Button[,] buttons = new Button[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] values = new int[BOARD_WIDTH, BOARD_WIDTH];
         private readonly int[,] oldValues = new int[BOARD_WIDTH, BOARD_WIDTH]; // used for undo functionality
         private int[] scoreTable = { 0, 0, 0, 0, 0 };   // initialise array with 0 values
         private int score = 0;
+        private int oldScore = 0;
         private Label scoreLabel;
         private Label gameOverLabel;
         private Button undoButton;
@@ -161,6 +163,7 @@ namespace _2048
 
             if (!CheckIfMovesAvailable())
             {
+                SaveToFile();
                 gameOverLabel.Text = "Game Over";
                 gameOverLabel.Visible = true;
             }
@@ -172,24 +175,15 @@ namespace _2048
             if (amount == 1) // If we need to generate only 1 new number
             {
                 Coordinates coordinates = CheckOpenSpace(direction); // gets the coordinates of a space
-                if (coordinates.x == -1 || coordinates.y == -1) // if coordinates are null that means there are no more open spaces left
-                {
-                    //GAME OVER (NO MORE SPACE LEFT)
-                    Console.WriteLine("ENDDD");
-                    return;
-                }
                 int number = random.Next(0, 1) == 0 ? 2 : 4; // generate a random number and decide if it's a 2 or a 4
                 values[coordinates.x, coordinates.y] = number;
-                oldValues[coordinates.x, coordinates.y] = number;
             }
             else // if we need 2 numbers
             {
                 Coordinates coordinates = CheckOpenSpace(direction); // gets the coordinates of a space
                 values[coordinates.x, coordinates.y] = 4;
-                oldValues[coordinates.x, coordinates.y] = 4;
                 coordinates = CheckOpenSpace(direction);
                 values[coordinates.x, coordinates.y] = 2;
-                oldValues[coordinates.x, coordinates.y] = 2;
             }
         }
 
@@ -433,6 +427,11 @@ namespace _2048
                     {
                         newColumn.Add(value * 2);
                         score += value * 2;
+                        if (value * 2 == 2048)
+                        {
+                            gameOverLabel.Text = "You Won!";
+                            gameOverLabel.Visible = true;
+                        }
                         value = 0;
                     }
                     else
@@ -479,6 +478,11 @@ namespace _2048
                     {
                         newColumn.Add(value * 2);
                         score += value * 2;
+                        if (value * 2 == 2048)
+                        {
+                            gameOverLabel.Text = "You Won!";
+                            gameOverLabel.Visible = true;
+                        }
                         value = 0;
                     }
                     else
@@ -525,6 +529,11 @@ namespace _2048
                     {
                         newColumn.Add(value * 2);
                         score += value * 2;
+                        if (value * 2 == 2048)
+                        {
+                            gameOverLabel.Text = "You Won!";
+                            gameOverLabel.Visible = true;
+                        }
                         value = 0;
                     }
                     else
@@ -665,6 +674,7 @@ namespace _2048
         {
             // restart game grid
             SaveToFile();
+            isSaved = false;
             score = 0;
             Array.Clear(values, 0, BOARD_WIDTH * BOARD_WIDTH);
             Array.Clear(oldValues, 0, BOARD_WIDTH * BOARD_WIDTH);
@@ -718,6 +728,7 @@ namespace _2048
 
             if (!CheckIfMovesAvailable())
             {
+                SaveToFile();
                 gameOverLabel.Text = "Game Over";
                 gameOverLabel.Visible = true;
             }
@@ -738,6 +749,7 @@ namespace _2048
                     oldValues[x, y] = values[x, y];
                 }
             }
+            oldScore = score;
         }
 
         public void Undo()
@@ -749,6 +761,7 @@ namespace _2048
                     values[x, y] = oldValues[x, y];
                 }
             }
+            score = oldScore;
         }
 
         public void LoadFromFile()
@@ -769,13 +782,14 @@ namespace _2048
 
         public void SaveToFile()
         {
-            if (InsertScore()) // if the scoreboard changed
+            if (!isSaved && InsertScore()) // if the scoreboard changed
             {
                 System.IO.StreamWriter file = new System.IO.StreamWriter(SAVE_FILE);
                 for(int x = 0; x < scoreTable.Length; x++)
                 {
                     file.WriteLine(scoreTable[x]);
                 }
+                isSaved = true;
                 file.Close();
             }
         }
